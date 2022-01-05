@@ -13,31 +13,27 @@ export default class Model {
     this.getContacts();
   }
 
-  bindContactsListChanged(callback) {
-    this.onContactsListChanged = callback
+  async getContacts() {
+    let response = await fetch(
+      DOMAIN + '/api/contacts', {
+        method: 'GET',
+        headers: { 'Response-Type': 'json' }
+      })
+
+    let contacts = await response.json();
+    return contacts;
   }
 
-  getContacts() {
-    return fetch(DOMAIN + '/api/contacts', {
+  async getContact(id) {
+    let response = await fetch(DOMAIN + `/api/contacts/${id}`, {
       method: 'GET',
       headers: { 'Response-Type': 'json' }})
-    .then((rawResponse) => rawResponse.json())
-    .then(response => {
-      this.contacts = response;
-    })
+
+    let contact = await response.json();
+    return contact;
   }
 
-  getContact(id) {
-    fetch(DOMAIN + `/api/contacts/${id}`, {
-      method: 'GET',
-      headers: { 'Response-Type': 'json' }})
-    .then((rawResponse) => rawResponse.json())
-    .then(response => {
-      console.log(response);
-    })
-  }
-
-  editContact(id, full_name, email, phone_number, tags) {
+  async editContact(id, full_name, email, phone_number, tags) {
     let json = JSON.stringify({
       id: id,
       full_name: full_name,
@@ -46,7 +42,7 @@ export default class Model {
       tags: tags,
     })
 
-    fetch(DOMAIN + `/api/contacts/${id}`, {
+    let response = await fetch(DOMAIN + `/api/contacts/${id}`, {
       method: 'PUT',
       headers: {
         'Content-type': 'application/json',
@@ -54,13 +50,12 @@ export default class Model {
       },
       body: json,
     })
-    .then(rawResponse => rawResponse.json())
-    .then(response => {
-      console.log(response)
-    })
+
+    await response.json();
+    this.onContactsListChanged();
   }
 
-  addContact(full_name, email, phone_number, tags) {
+  async addContact(full_name, email, phone_number, tags) {
     let json = JSON.stringify({
       full_name: full_name,
       email: email,
@@ -68,7 +63,7 @@ export default class Model {
       tags: tags,
     })
 
-    fetch(DOMAIN + '/api/contacts', {
+    let response = await fetch(DOMAIN + '/api/contacts', {
       method: 'POST',
       headers: {
         'Content-type': 'application/json',
@@ -76,18 +71,19 @@ export default class Model {
       },
       body: json,
     })
-    .then(rawResponse => rawResponse.json())
-    .then(response => {
-      console.log(response)
-    })
+
+    await response.json()
+    this.onContactsListChanged();
   }
 
-  deleteContact(id) {
-    fetch(DOMAIN + `/api/contacts/${id}`, {
+  async deleteContact(id) {
+    await fetch(DOMAIN + `/api/contacts/${id}`, {
       method: 'DELETE'})
-    .then((rawResponse) => rawResponse.json())
-    .then(response => {
-      console.log(response);
-    })
+
+    this.onContactsListChanged();
+  }
+
+  bindContactsListChanged(callback) {
+    this.onContactsListChanged = callback;
   }
 }

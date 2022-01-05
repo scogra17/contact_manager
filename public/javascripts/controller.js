@@ -5,22 +5,22 @@ export default class Controller {
     this.model = model
     this.view = view
 
-    // Display initial contacts
-    this.onContactsListChanged();
+    this.getAndDisplayContacts();
     this.bindEvents();
   }
 
+  getAndDisplayContacts = async () => {
+    this.model.contacts = await this.model.getContacts();
+    this.view.displayContacts(this.model.contacts);
+  }
+
   bindEvents() {
-    this.model.bindContactsListChanged(this.onTodoListChanged)
+    this.model.bindContactsListChanged(this.getAndDisplayContacts);
     this.view.bindSearchContact(this.handleSearchContacts);
     this.view.bindEditContact(this.handleEditContact);
     this.view.bindDeleteContact(this.handleDeleteContact);
   }
 
-  onContactsListChanged = async () => {
-    await this.model.getContacts();
-    this.view.displayContacts(this.model.contacts);
-  }
 
   // Using arrow function here allow this to be called
   // from the View using the `this` context of the controller
@@ -36,6 +36,5 @@ export default class Controller {
 
   handleDeleteContact = (id) => {
     this.model.deleteContact(id);
-    this.view.displayContacts(this.model.contacts)
   }
 }
