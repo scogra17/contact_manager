@@ -12,12 +12,5 @@
     "email": "vpr@example.com",
     "phone_number": "09876543210",
     "tags": "work,friend"
-  },
-  {
-    "id": 3,
-    "full_name": "Pete Hanson",
-    "email": "ph@example.com",
-    "phone_number": "54321098761",
-    "tags": null
   }
 ]

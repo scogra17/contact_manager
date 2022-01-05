@@ -1,0 +1,15 @@
+@import 'whitespace-reset.css';
+
+body {
+  padding: 20px;
+}
+
+.contact-card {
+  display: inline-block;
+}
+
+#contacts-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  row-gap: 30px;
+}

@@ -4,11 +4,44 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Document</title>
+  <link rel="stylesheet" href="stylesheets/styles.css">
+  <title>Contact Manager</title>
   <script src="/javascripts/handlebars.js"></script>
 </head>
 <body>
   <div id="root"></div>
+  <script id="contact-template" type="text/x-handlebars">
+    <li id={{id}} class="contact-card">
+      <h4>{{full_name}}</h4>
+      <h5>Phone number:</h5>
+      <p>{{phone_number}}</p>
+      <h5>Email:</h5>
+      <p>{{email}}</p>
+      <h5>Tags:</h5>
+      <p>{{tags}}</p>
+      <a class="btn edit" data-id="{{id}}" href="#">Edit</a>
+      <a class="btn delete" data-id="{{id}}" href="#">Delete</a>
+    </li>
+  </script>
+  <script id="form-template" type="text/x-handlebars">
+    <form id= "form" method="{{method}}" action="{{action}}">
+      <label for="full_name">Full name:</label>
+      <input type="text" id="full_name" name="full_name">
+
+      <label for="email">Email address:</label>
+      <input type="text" id="email" name="email">
+
+      <label for="phone_number">Telephone number:</label>
+      <input type="text" id="phone_number" name="phone_number">
+
+      <label for="tags">Tag</label>
+      <select id="tags" name="tags">
+        <option value="tag1">Tag1</option>
+      </select>
+      <input type="submit" value="Submit">
+      <input id="cancel-add-contacts-btn" type="button" value="Cancel">
+    </form>
+  </script>
 </body>
-  <script src="/javascripts/app.js"></script>
+  <script type="module" src="/javascripts/app.js"></script>
 </html>
