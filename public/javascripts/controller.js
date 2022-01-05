@@ -19,6 +19,8 @@ export default class Controller {
     this.view.bindSearchContact(this.handleSearchContacts);
     this.view.bindEditContact(this.handleEditContact);
     this.view.bindDeleteContact(this.handleDeleteContact);
+    this.view.bindSubmitEditContact(this.handleSubmitEditContact);
+    this.view.bindCancelEditContact(this.handleCancelEditContact);
   }
 
 
@@ -30,11 +32,23 @@ export default class Controller {
     })
   )}
 
-  handleEditContact = (id) => {
-    this.view.displayForm()
+  handleEditContact = async (id) => {
+    let contact = await this.model.getContact(id);
+    this.view.clearMainDisplay();
+    this.view.displayEditContactForm(contact);
   }
 
   handleDeleteContact = (id) => {
     this.model.deleteContact(id);
+  }
+
+  handleSubmitEditContact = (contact) => {
+    this.model.editContact(contact);
+    this.view.displayHomeDOMElements();
+  }
+
+  handleCancelEditContact = () => {
+    this.view.displayHomeDOMElements();
+    this.getAndDisplayContacts();
   }
 }

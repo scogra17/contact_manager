@@ -9,7 +9,8 @@
   <script src="/javascripts/handlebars.js"></script>
 </head>
 <body>
-  <div id="root"></div>
+  <header></header>
+  <main></main>
   <script id="contact-template" type="text/x-handlebars">
     <li id={{id}} class="contact-card">
       <h4>{{full_name}}</h4>
@@ -24,20 +25,19 @@
     </li>
   </script>
   <script id="form-template" type="text/x-handlebars">
-    <form id= "form" method="{{method}}" action="{{action}}">
+    <form>
       <label for="full_name">Full name:</label>
-      <input type="text" id="full_name" name="full_name">
+      <input type="text" id="full_name" name="full_name" value={{full_name}}>
 
       <label for="email">Email address:</label>
-      <input type="text" id="email" name="email">
+      <input type="text" id="email" name="email" value={{email}}>
 
       <label for="phone_number">Telephone number:</label>
-      <input type="text" id="phone_number" name="phone_number">
+      <input type="text" id="phone_number" name="phone_number" value={{phone_number}}>
 
-      <label for="tags">Tag</label>
-      <select id="tags" name="tags">
-        <option value="tag1">Tag1</option>
-      </select>
+      <label for="tags">Tags:</label>
+      <input type="text" id="tags" name="tags" value={{tags}}>
+
       <input type="submit" value="Submit">
       <input id="cancel-add-contacts-btn" type="button" value="Cancel">
     </form>

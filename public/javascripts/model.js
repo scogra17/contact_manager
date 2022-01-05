@@ -33,16 +33,16 @@ export default class Model {
     return contact;
   }
 
-  async editContact(id, full_name, email, phone_number, tags) {
+  async editContact(contact) {
     let json = JSON.stringify({
-      id: id,
-      full_name: full_name,
-      email: email,
-      phone_number: phone_number,
-      tags: tags,
+      id: contact.id,
+      full_name: contact.full_name,
+      email: contact.email,
+      phone_number: contact.phone_number,
+      tags: contact.tags,
     })
 
-    let response = await fetch(DOMAIN + `/api/contacts/${id}`, {
+    let response = await fetch(DOMAIN + `/api/contacts/${contact.id}`, {
       method: 'PUT',
       headers: {
         'Content-type': 'application/json',
