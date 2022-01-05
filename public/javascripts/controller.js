@@ -21,8 +21,10 @@ export default class Controller {
     this.view.bindDeleteContact(this.handleDeleteContact);
     this.view.bindSubmitEditContact(this.handleSubmitEditContact);
     this.view.bindCancelEditContact(this.handleCancelEditContact);
+    this.view.bindAddContact(this.handleAddContact);
+    this.view.bindCancelAddContact(this.handleCancelAddContact);
+    this.view.bindSubmitAddContact(this.handleSubmitAddContact);
   }
-
 
   // Using arrow function here allow this to be called
   // from the View using the `this` context of the controller
@@ -32,14 +34,14 @@ export default class Controller {
     })
   )}
 
+  handleDeleteContact = (id) => {
+    this.model.deleteContact(id);
+  }
+
   handleEditContact = async (id) => {
     let contact = await this.model.getContact(id);
     this.view.clearMainDisplay();
     this.view.displayEditContactForm(contact);
-  }
-
-  handleDeleteContact = (id) => {
-    this.model.deleteContact(id);
   }
 
   handleSubmitEditContact = (contact) => {
@@ -50,5 +52,20 @@ export default class Controller {
   handleCancelEditContact = () => {
     this.view.displayHomeDOMElements();
     this.getAndDisplayContacts();
+  }
+
+  handleAddContact = () => {
+    this.view.clearMainDisplay();
+    this.view.displayAddContactForm();
+  }
+
+  handleCancelAddContact = () => {
+    this.view.displayHomeDOMElements();
+    this.getAndDisplayContacts();
+  }
+
+  handleSubmitAddContact = (contact) => {
+    this.model.addContact(contact);
+    this.view.displayHomeDOMElements();
   }
 }

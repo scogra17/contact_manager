@@ -1,8 +1,5 @@
 export default class View {
   constructor() {
-    this.main = document.querySelector('main');
-    this.header = document.querySelector('header');
-
     this.contactTemplate = Handlebars.compile(document.querySelector('#contact-template').innerHTML);
     this.formTemplate = Handlebars.compile(document.querySelector('#form-template').innerHTML);
 
@@ -14,12 +11,14 @@ export default class View {
   // DOM element creation methods
 
   createDOMElements() {
+    this.main = document.querySelector('main');
+    this.header = document.querySelector('header');
     this.title = this.createTitle('Contact Manager', 'h1');
     this.searchInput = this.createSearchInput();
     this.addContactButton = this.createButton('Add Contact');
     this.contactsList = this.createContactsList();
-    this.createEditContactForm();
-    this.createAddContactForm();
+    this.editContactForm = this.createEditContactForm();
+    this.addContactForm = this.createAddContactForm();
   }
 
   createSearchInput() {
@@ -42,11 +41,11 @@ export default class View {
   }
 
   createEditContactForm() {
-    this.editContactForm = this.createContactForm('Edit');
+    return this.createContactForm('Edit');
   }
 
   createAddContactForm() {
-    this.addContactForm = this.createContactForm('Add');
+    return this.createContactForm('Add');
   }
 
   // Display methods
@@ -60,34 +59,22 @@ export default class View {
     this.main.append(this.editContactForm);
   }
 
+  displayAddContactForm() {
+    this.addContactForm
+    this.main.append(this.addContactForm);
+  }
+
   displayHomeDOMElements() {
-    while (this.main.firstChild) {
-      this.main.removeChild(this.main.firstChild);
-    }
-    this.main.append(this.addContactButton);
-    this.main.append(this.searchInput);
-    this.main.append(this.contactsList);
+    this.clearMainDisplay();
+    this.main.append(
+      this.addContactButton,
+      this.searchInput,
+      this.contactsList);
     this.displayContacts();
   }
 
-
-  // Helper methods
-
-  createContactForm(title, contact = {}) {
-    let elem = this.createElement('div', `${title.toLowerCase()}-contact-form`);
-    let heading = this.createTitle(title, 'h3');
-    elem.innerHTML = this.formTemplate(contact);
-    elem.insertBefore(heading, elem.firstChild)
-    return elem;
-  }
-
-  createTitle(text, type) {
-    let elem = this.createElement(type);
-    elem.textContent = text;
-    return elem;
-  }
-
   clearMainDisplay() {
+    this._resetSearchInput();
     while (this.main.firstChild) {
       this.main.removeChild(this.main.firstChild);
     }
@@ -111,6 +98,9 @@ export default class View {
       this.contactsList.innerHTML = template.join("");
     }
   }
+
+
+  // Event listeners
 
   bindSearchContact(handler) {
     this.searchInput.addEventListener('keyup', event => {
@@ -152,6 +142,45 @@ export default class View {
       event.preventDefault();
       handler();
     })
+  }
+
+  bindAddContact(handler) {
+    this.addContactButton.addEventListener('click', event => {
+      event.preventDefault();
+      handler();
+    })
+  }
+
+  bindCancelAddContact(handler) {
+    this.addContactForm.querySelector('#cancel-add-contacts-btn').addEventListener('click', event => {
+      event.preventDefault();
+      handler();
+    })
+  }
+
+  bindSubmitAddContact(handler) {
+    this.addContactForm.addEventListener('submit', event => {
+      event.preventDefault();
+      let contact = this.prepareFormData(this.addContactForm.querySelector('form'));
+      handler(contact);
+    })
+  }
+
+
+  // Helper methods
+
+  createContactForm(title, contact = {}) {
+    let elem = this.createElement('div', `${title.toLowerCase()}-contact-form`);
+    let heading = this.createTitle(title, 'h3');
+    elem.innerHTML = this.formTemplate(contact);
+    elem.insertBefore(heading, elem.firstChild)
+    return elem;
+  }
+
+  createTitle(text, type) {
+    let elem = this.createElement(type);
+    elem.textContent = text;
+    return elem;
   }
 
   formDataToJson(formData) {

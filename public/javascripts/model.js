@@ -55,13 +55,8 @@ export default class Model {
     this.onContactsListChanged();
   }
 
-  async addContact(full_name, email, phone_number, tags) {
-    let json = JSON.stringify({
-      full_name: full_name,
-      email: email,
-      phone_number: phone_number,
-      tags: tags,
-    })
+  async addContact(contact) {
+    let json = JSON.stringify(contact);
 
     let response = await fetch(DOMAIN + '/api/contacts', {
       method: 'POST',
