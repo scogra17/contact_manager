@@ -15,10 +15,12 @@ export default class View {
     this.header = document.querySelector('header');
     this.title = this.createTitle('Contact Manager', 'h1');
     this.searchInput = this.createSearchInput();
+    this.tagDropdown = this.createTagDropdown();
     this.addContactButton = this.createButton('Add Contact');
     this.contactsList = this.createContactsList();
     this.editContactForm = this.createEditContactForm();
     this.addContactForm = this.createAddContactForm();
+    this.addTagsForm = this.createAddTagsForm();
   }
 
   createSearchInput() {
@@ -26,6 +28,18 @@ export default class View {
     elem.type = 'text';
     elem.placeholder = 'Search';
     elem.name = 'search';
+    return elem;
+  }
+
+  createTagDropdown() {
+    let elem = this.createElement('select');
+    elem.name = 'tags'
+    let placeholder = this.createElement('option');
+    placeholder.value = ''
+    placeholder.setAttribute('selected', null);
+    placeholder.textContent = "Filter by tag"
+    elem.appendChild(placeholder);
+
     return elem;
   }
 
@@ -48,20 +62,51 @@ export default class View {
     return this.createContactForm('Add');
   }
 
+  createAddTagsForm() {
+    let elem = this.createElement('form');
+    elem.setAttribute('id', 'tag-form');
+    let label = this.createElement('label');
+    label.setAttribute('for', 'new-tag');
+    label.textContent = 'Add new tag';
+    let textInput = this.createElement('input');
+    textInput.setAttribute('type', 'text');
+    textInput.setAttribute('name', 'new-tag');
+    textInput.setAttribute('id', 'new-tag');
+    textInput.setAttribute('placeholder', 'New tag...');
+    let submitInput = this.createElement('input');
+    submitInput.setAttribute('type', 'submit');
+    submitInput.setAttribute('value', 'Add tag');
+    elem.appendChild(label);
+    elem.appendChild(textInput);
+    elem.appendChild(submitInput);
+    return elem;
+  }
+
   // Display methods
 
   displayTitle() {
     this.header.append(this.title);
   }
 
-  displayEditContactForm(contact) {
-    this.populateFormWithJSON(this.editContactForm, contact)
+  displayEditContactForm(contact, tags) {
+    this.populateFormWithJSON(this.editContactForm, contact);
+    this.populateFormWithTags(this.editContactForm, tags);
+    this.markSelectedTags(this.editContactForm, contact);
     this.main.append(this.editContactForm);
   }
 
-  displayAddContactForm() {
-    this.addContactForm
+  displayAddContactForm(tags) {
+    this.populateFormWithTags(this.addContactForm, tags)
     this.main.append(this.addContactForm);
+  }
+
+  displayTag(tag) {
+    let option = this.createOptionElement(tag, tag);
+    this.getElement('select').append(option);
+  }
+
+  displayAddTagForm() {
+    this.main.append(this.addTagsForm);
   }
 
   displayHomeDOMElements() {
@@ -69,14 +114,44 @@ export default class View {
     this.main.append(
       this.addContactButton,
       this.searchInput,
+      this.tagDropdown,
       this.contactsList);
     this.displayContacts();
   }
 
+  displayTags(tags) {
+    let elems = [];
+    let option;
+    for (const tag in tags) {
+      option = this.createElement('option');
+      option.value = tag;
+      option.textContent = tag;
+      elems.push(option);
+    }
+    elems.forEach(elem => {
+      this.tagDropdown.appendChild(elem);
+    })
+  }
+
+  clearAddContactForm() {
+    this.addContactForm.querySelector('#full_name').value = '';
+    this.addContactForm.querySelector('#email').value = '';
+    this.addContactForm.querySelector('#phone_number').value = '';
+    this.addContactForm.querySelector('#tags').value = '';
+  }
+
+  clearAddTagForm() {
+    this.addTagsForm.querySelector('#new-tag').value = '';
+  }
+
   clearMainDisplay() {
     this._resetSearchInput();
-    while (this.main.firstChild) {
-      this.main.removeChild(this.main.firstChild);
+    this.clearElementChildren(this.main);
+  }
+
+  clearElementChildren(element) {
+    while (element.firstChild) {
+      element.removeChild(element.firstChild);
     }
   }
 
@@ -106,6 +181,14 @@ export default class View {
     this.searchInput.addEventListener('keyup', event => {
       event.preventDefault();
       handler(this._searchInputText)
+    })
+  }
+
+  bindFilterByTag(handler) {
+    this.tagDropdown.addEventListener('change', event => {
+      event.preventDefault();
+      let name = event.target.options[event.target.options.selectedIndex].label
+      handler(name)
     })
   }
 
@@ -166,6 +249,14 @@ export default class View {
     })
   }
 
+  bindSubmitAddTag(handler) {
+    this.addTagsForm.addEventListener('submit', event => {
+      event.preventDefault();
+      let tag = Object.values(this.prepareFormData(this.addTagsForm))[0];
+      handler(tag)
+    })
+  }
+
 
   // Helper methods
 
@@ -186,7 +277,11 @@ export default class View {
   formDataToJson(formData) {
     let json = {};
     for (let pair of formData.entries()) {
-      json[pair[0]] = pair[1];
+      if (json[pair[0]]) {
+        json[pair[0]] = [json[pair[0]], pair[1]].join(',');
+      } else {
+        json[pair[0]] = pair[1];
+      }
     }
     return json;
   }
@@ -205,6 +300,41 @@ export default class View {
       }
     }
     form.id = data['id'];
+  }
+
+  populateFormWithTags(form, tags) {
+    let select = form.querySelector('select');
+    this.clearElementChildren(select);
+
+    let tagOptions = [];
+    let option;
+    Object.keys(tags).forEach(tag => {
+      option = this.createOptionElement(tag, tag);
+      tagOptions.push(option);
+    })
+
+    tagOptions.forEach(tagOption => {
+      select.append(tagOption);
+    })
+  }
+
+  createOptionElement(value, text) {
+    let option = this.createElement('option');
+    option.value = value;
+    option.textContent = text;
+    return option;
+  }
+
+  markSelectedTags(form, contact) {
+    let contactTags = contact.tags.split(',');
+    let options = form.querySelector('select').querySelectorAll('option');
+    let option;
+    for (let i = 0; i < options.length; i += 1) {
+      option = options[i];
+      if (contactTags.includes(option.value)) {
+        option.setAttribute('selected', true);
+      }
+    }
   }
 
   createElement(tag, className) {

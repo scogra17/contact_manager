@@ -4,7 +4,7 @@
     "full_name": "Naveed Fida",
     "email": "nf@example.com",
     "phone_number": "12345678901",
-    "tags": "work,friend"
+    "tags": "taggg1,dsf,jon,admin"
   },
   {
     "full_name": "Scott Graham",
@@ -24,7 +24,21 @@
     "full_name": "Liz Nunley",
     "phone_number": "8045136279",
     "email": "elizabeth.m.nunley@gmail.com",
-    "tags": "t",
-    "id": 4
+    "tags": "taggg1,dsf",
+    "id": 5
+  },
+  {
+    "full_name": "Scott Graham",
+    "phone_number": "4153596818",
+    "email": "scttgrhm7@gmail.com",
+    "tags": "taggg1,dsf",
+    "id": 6
+  },
+  {
+    "full_name": "Liz Nunley",
+    "phone_number": "8045136279",
+    "email": "elizabeth.m.nunley@gmail.com",
+    "tags": "dsf,jon",
+    "id": 7
   }
 ]

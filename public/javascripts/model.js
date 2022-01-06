@@ -9,7 +9,7 @@ export default class Model {
   // should know nothing about the DOM, HTML elements, CSS, etc.
   constructor() {
     this.contacts = [];
-    this.tags = [];
+    this.tags = {};
     this.getContacts();
   }
 
@@ -22,6 +22,23 @@ export default class Model {
 
     let contacts = await response.json();
     return contacts;
+  }
+
+  async updateTags() {
+    this.contacts.forEach(contact => {
+      let tags = contact.tags.split(',');
+      tags.forEach(tag => {
+        if (!this.tags[tag]) {
+          this.tags[tag] = true;
+        }
+      })
+    })
+  }
+
+  addTag(tag) {
+    if (!this.tags[tag]) {
+      this.tags[tag] = true;
+    }
   }
 
   async getContact(id) {

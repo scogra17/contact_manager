@@ -25,7 +25,7 @@
     </li>
   </script>
   <script id="form-template" type="text/x-handlebars">
-    <form>
+    <form id="contact-form">
       <label for="full_name">Full name:</label>
       <input type="text" id="full_name" name="full_name" value={{full_name}}>
 
@@ -36,7 +36,7 @@
       <input type="text" id="phone_number" name="phone_number" value={{phone_number}}>
 
       <label for="tags">Tags:</label>
-      <input type="text" id="tags" name="tags" value={{tags}}>
+      <select name="tags" id="tags" multiple></select>
 
       <input type="submit" value="Submit">
       <input id="cancel-add-contacts-btn" type="button" value="Cancel">
