@@ -4,16 +4,34 @@ export default class Controller {
   constructor(model, view) {
     this.model = model
     this.view = view
+    this.searchTerm = '';
+    this.filterTag = '';
 
     this.getAndDisplayContacts();
     this.bindEvents();
+  }
+
+  filteredContacts() {
+    let filteredContacts = Object.assign(this.model.contacts);
+    if (this.searchTerm) {
+      filteredContacts = filteredContacts.filter(contact => {
+        return contact.full_name.toLowerCase().includes(this.searchTerm.toLocaleLowerCase());
+      })
+    }
+
+    if (this.filterTag) {
+      filteredContacts = filteredContacts.filter(contact => {
+        return contact.tags.split(',').includes(this.filterTag);
+      })
+    }
+    return filteredContacts;
   }
 
   getAndDisplayContacts = async () => {
     this.model.contacts = await this.model.getContacts();
     this.model.updateTags();
     this.view.displayTags(this.model.tags);
-    this.view.displayContacts(this.model.contacts);
+    this.view.displayContacts(this.filteredContacts());
   }
 
   bindEvents() {
@@ -33,19 +51,13 @@ export default class Controller {
   // Using arrow function here allow this to be called
   // from the View using the `this` context of the controller
   handleSearchContacts = (searchText) => {
-    this.view.displayContacts(this.model.contacts.filter(contact => {
-      return contact.full_name.toLowerCase().includes(searchText.toLowerCase());
-    })
-  )}
+    this.searchTerm = searchText;
+    this.view.displayContacts(this.filteredContacts());
+  }
 
   handleFilterByTag = (tag) => {
-    if (this.model.tags[tag]) {
-      this.view.displayContacts(this.model.contacts.filter(contact => {
-        return contact.tags.split(',').includes(tag);
-      }))
-    } else {
-      this.view.displayContacts(this.model.contacts);
-    }
+    this.filterTag = tag;
+    this.view.displayContacts(this.filteredContacts());
   }
 
   validateContact = (contact) => {

@@ -34,11 +34,6 @@ export default class View {
   createTagDropdown() {
     let elem = this.createElement('select');
     elem.name = 'tags'
-    let placeholder = this.createElement('option');
-    placeholder.value = ''
-    placeholder.setAttribute('selected', null);
-    placeholder.textContent = "Filter by tag"
-    elem.appendChild(placeholder);
 
     return elem;
   }
@@ -120,7 +115,14 @@ export default class View {
   }
 
   displayTags(tags) {
-    let elems = [];
+    this.clearElementChildren(this.tagDropdown);
+
+    let placeholder = this.createElement('option');
+    placeholder.value = ''
+    placeholder.setAttribute('selected', null);
+    placeholder.textContent = "Filter by tag"
+
+    let elems = [placeholder];
     let option;
     for (const tag in tags) {
       option = this.createElement('option');
@@ -172,7 +174,7 @@ export default class View {
   }
 
   clearMainDisplay() {
-    this._resetSearchInput();
+    // this._resetSearchInput();
     this.clearElementChildren(this.main);
   }
 
@@ -214,7 +216,7 @@ export default class View {
   bindFilterByTag(handler) {
     this.tagDropdown.addEventListener('change', event => {
       event.preventDefault();
-      let name = event.target.options[event.target.options.selectedIndex].label
+      let name = event.target.options[event.target.options.selectedIndex].value
       handler(name)
     })
   }

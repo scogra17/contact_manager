@@ -10,7 +10,7 @@
     "full_name": "Scott Graham",
     "phone_number": "1231",
     "email": "1312@gmail.com",
-    "tags": "taggg1",
+    "tags": "dsf,jon",
     "id": 2
   },
   {
@@ -19,13 +19,6 @@
     "email": "1111111@gmail.com",
     "tags": "taggg1",
     "id": 3
-  },
-  {
-    "full_name": "Liz Nunley",
-    "phone_number": "8045136279",
-    "email": "elizabeth.m.nunley@gmail.com",
-    "tags": "taggg1,dsf",
-    "id": 5
   },
   {
     "full_name": "Scott Graham",
@@ -38,14 +31,7 @@
     "full_name": "Liz Nunley",
     "phone_number": "8045136279",
     "email": "elizabeth.m.nunley@gmail.com",
-    "tags": "dsf,jon,admin,party",
+    "tags": "jon,admin,towel",
     "id": 7
-  },
-  {
-    "full_name": "Scott Graham",
-    "phone_number": "4153596818",
-    "email": "scttgrhm7@gmail.com",
-    "tags": "jon,admin",
-    "id": 8
   }
 ]
