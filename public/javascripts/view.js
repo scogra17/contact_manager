@@ -133,6 +133,33 @@ export default class View {
     })
   }
 
+  displayValidationError(validationErrors) {
+    let labels = this.getElement('#contact-form').querySelectorAll('label');
+    let label;
+    let validationError;
+    let message;
+
+    for (let i = 0; i < labels.length; i += 1) {
+      label = labels[i];
+      validationError = validationErrors[label.getAttribute('for')];
+      if (validationError) {
+        message = this.createElement('p');
+        message.classList.add('error-message');
+        message.textContent = validationError;
+        label.appendChild(message);
+      }
+    }
+  }
+
+  clearValidationErrors() {
+    let errorMessages = document.querySelectorAll('.error-message');
+    if (errorMessages) {
+      for (let i = 0; i < errorMessages.length; i += 1) {
+        errorMessages[i].remove();
+      }
+    }
+  }
+
   clearAddContactForm() {
     this.addContactForm.querySelector('#full_name').value = '';
     this.addContactForm.querySelector('#email').value = '';

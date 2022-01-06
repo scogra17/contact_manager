@@ -48,6 +48,18 @@ export default class Controller {
     }
   }
 
+  validateContact = (contact) => {
+    let validationError = {};
+    for (const k in contact) {
+      if (k != "tags") {
+        if (!contact[k]) {
+          validationError[k] = 'Invalid. Please enter a value.'
+        }
+      }
+    }
+    return validationError;
+  }
+
   handleDeleteContact = (id) => {
     this.model.deleteContact(id);
   }
@@ -60,8 +72,14 @@ export default class Controller {
   }
 
   handleSubmitEditContact = (contact) => {
-    this.model.editContact(contact);
-    this.view.displayHomeDOMElements();
+    let validationError = this.validateContact(contact);
+    if (!Object.keys(validationError).length) {
+      this.model.editContact(contact);
+      this.view.displayHomeDOMElements();
+    } else {
+      this.view.clearValidationErrors();
+      this.view.displayValidationError(validationError);
+    }
   }
 
   handleCancelEditContact = () => {
@@ -81,9 +99,15 @@ export default class Controller {
   }
 
   handleSubmitAddContact = (contact) => {
-    this.model.addContact(contact);
-    this.view.clearAddContactForm();
-    this.view.displayHomeDOMElements();
+    let validationError = this.validateContact(contact);
+    if (!Object.keys(validationError).length) {
+      this.model.addContact(contact);
+      this.view.clearAddContactForm();
+      this.view.displayHomeDOMElements();
+    } else {
+      this.view.clearValidationErrors();
+      this.view.displayValidationError(validationError);
+    }
   }
 
   handleSubmitAddTag = (tag) => {

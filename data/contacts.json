@@ -38,7 +38,14 @@
     "full_name": "Liz Nunley",
     "phone_number": "8045136279",
     "email": "elizabeth.m.nunley@gmail.com",
-    "tags": "dsf,jon",
+    "tags": "dsf,jon,admin,party",
     "id": 7
+  },
+  {
+    "full_name": "Scott Graham",
+    "phone_number": "4153596818",
+    "email": "scttgrhm7@gmail.com",
+    "tags": "jon,admin",
+    "id": 8
   }
 ]
