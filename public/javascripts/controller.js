@@ -3,7 +3,7 @@ export default class Controller {
     this.model = model
     this.view = view
     this.searchTerm = '';
-    this.filterTag = '';
+    this.tagFilter = '';
 
     this.getAndDisplayContacts();
     this.bindEvents();
@@ -16,10 +16,9 @@ export default class Controller {
         return contact.full_name.toLowerCase().includes(this.searchTerm.toLocaleLowerCase());
       })
     }
-
-    if (this.filterTag) {
+    if (this.tagFilter) {
       filteredContacts = filteredContacts.filter(contact => {
-        return contact.tags && contact.tags.split(',').includes(this.filterTag);
+        return contact.tags && contact.tags.split(',').includes(this.tagFilter);
       })
     }
     return filteredContacts;
@@ -46,32 +45,20 @@ export default class Controller {
     this.view.bindSubmitAddTag(this.handleSubmitAddTag);
   }
 
-  // Using arrow function here allow this to be called
-  // from the View using the `this` context of the controller
   handleSearchContacts = (searchText) => {
     this.searchTerm = searchText;
     this.view.displayContacts(this.filteredContacts());
   }
 
   handleFilterByTag = (tag) => {
-    this.filterTag = tag;
+    this.tagFilter = tag;
     this.view.displayContacts(this.filteredContacts());
   }
 
-  validateContact = (contact) => {
-    let validationError = {};
-    for (const k in contact) {
-      if (k != "tags") {
-        if (!contact[k]) {
-          validationError[k] = 'Invalid. Please enter a value.'
-        }
-      }
-    }
-    return validationError;
-  }
-
   handleDeleteContact = (id) => {
-    this.model.deleteContact(id);
+    if (confirm('Do you want to delete the contact?')) {
+      this.model.deleteContact(id);
+    }
   }
 
   handleEditContact = async (id) => {
@@ -81,7 +68,7 @@ export default class Controller {
   }
 
   handleSubmitEditContact = (contact) => {
-    let validationError = this.validateContact(contact);
+    let validationError = this.model.validateContact(contact);
     if (!Object.keys(validationError).length) {
       this.model.editContact(contact);
       this.view.displayHomeElements();
@@ -107,7 +94,7 @@ export default class Controller {
   }
 
   handleSubmitAddContact = (contact) => {
-    let validationError = this.validateContact(contact);
+    let validationError = this.model.validateContact(contact);
     if (!Object.keys(validationError).length) {
       this.model.addContact(contact);
       this.view.clearAddContactForm();

@@ -1,16 +1,22 @@
 const DOMAIN = 'http://localhost:3000';
 
 export default class Model {
-  // only handles data and modifying data
-  // has no knowledge of what's modifying it
-  // has no knowledge of how data will be displayed
-  // sufficient for CRUD app CLI
-
-  // should know nothing about the DOM, HTML elements, CSS, etc.
   constructor() {
     this.contacts = [];
     this.tags = {};
     this.getContacts();
+  }
+
+  validateContact = (contact) => {
+    let validationError = {};
+    for (const k in contact) {
+      if (k != "tags") {
+        if (!contact[k]) {
+          validationError[k] = 'Invalid. Please enter a value.'
+        }
+      }
+    }
+    return validationError;
   }
 
   async getContacts() {
@@ -96,7 +102,7 @@ export default class Model {
     this.onContactsListChanged();
   }
 
-  bindContactsListChanged(callback) {
-    this.onContactsListChanged = callback;
+  bindContactsListChanged(handler) {
+    this.onContactsListChanged = handler;
   }
 }

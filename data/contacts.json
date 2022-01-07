@@ -1,19 +1,5 @@
 [
   {
-    "full_name": "Scott Graham",
-    "phone_number": "4153596818",
-    "email": "scttgrhm7@gmail.com",
-    "tags": "johnson,scott",
-    "id": 6
-  },
-  {
-    "full_name": "Scott Graham",
-    "phone_number": "4153596818",
-    "email": "scttgrhm7@gmail.com",
-    "tags": "jon",
-    "id": 8
-  },
-  {
     "full_name": "Liz Nunley",
     "phone_number": "8045136279",
     "email": "elizabeth.m.nunley@gmail.com",
@@ -24,7 +10,14 @@
     "full_name": "Scott Graham",
     "phone_number": "4153596818",
     "email": "scttgrhm7@gmail.com",
-    "tags": null,
+    "tags": "johnson,scott",
     "id": 10
+  },
+  {
+    "full_name": "Scott Graham",
+    "phone_number": "4153596818",
+    "email": "scttgrhm7@gmail.com",
+    "tags": "customer service",
+    "id": 11
   }
 ]

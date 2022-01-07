@@ -23,7 +23,9 @@ export default class View {
     this.addTagForm = this.createAddTagForm();
 
     // non-container elements
-    this.title = this.createTitle('Contact Manager', 'h1');
+    this.title = this.createTitle('h1', 'Contact Manager');
+    this.editFormHeading = this.createTitle('h2', 'Edit Contact');
+    this.addFormHeading = this.createTitle('h2', 'Add Contact');
     this.searchInput = this.createSearchInput();
     this.tagDropdown = this.createTagDropdown();
     this.addContactButton = this.createAddContactButton();
@@ -53,6 +55,7 @@ export default class View {
   createAddContactButton(text) {
     return this.createElement({
       tag: 'a',
+      classes: ['btn'],
       textContent: 'Add Contact',
       attributes: {'href': '#'}
     });
@@ -62,9 +65,9 @@ export default class View {
     return this.createElement({tag: 'ul', id: 'contacts-list'});
   }
 
-  createEditContactForm() { return this.createContactForm('Edit contact') };
+  createEditContactForm() { return this.createContactForm('Save') };
 
-  createAddContactForm() { return this.createContactForm('Add contact') };
+  createAddContactForm() { return this.createContactForm('Save new contact') };
 
   createAddTagForm() {
     let elem = this.createElement({tag: 'div', classes: ['tag-form']});
@@ -287,11 +290,9 @@ export default class View {
 
   // Helper methods
 
-  createContactForm(title, contact = {}) {
+  createContactForm(saveButtonText, contact = {}) {
     let elem = this.createElement({tag: 'div', classes: ['contact-form']});
-    let heading = this.createTitle(title, 'h3');
-    elem.innerHTML = this.formTemplate(contact);
-    elem.insertBefore(heading, elem.firstChild)
+    elem.innerHTML = this.formTemplate(Object.assign(contact, {action: saveButtonText}));
     return elem;
   }
 
@@ -300,7 +301,7 @@ export default class View {
     return option;
   }
 
-  createTitle(text, type) { return this.createElement({tag: type, textContent: text}) };
+  createTitle(type, text) { return this.createElement({tag: type, textContent: text}) };
 
   formDataToJson(formData) {
     let json = {};

@@ -2,6 +2,7 @@
 
 body {
   padding: 20px;
+  max-width: 700px;
 }
 
 h1 {
@@ -39,6 +40,43 @@ h1 {
 
 #tag-form {
   max-height: .2vh;
+}
+
+input[type="submit"], input[type="button"] {
+  margin-top: 10px;
+}
+
+.form-field.input, input[type="text"] {
+  padding-left: 5px;
+}
+
+select[multiple] {
+  margin-top: 5px;
+  padding-top: 5px;
+}
+
+form input[type="text"] {
+  margin: 5px 0px;
+  height: 1.5em;
+}
+
+.btn {
+  border: none;
+  text-decoration: none;
+  display: inline-block;
+  padding: 5px;
+  background-color: rgb(104, 126, 174);
+  border-radius: 2px;
+  color: white;
+  text-align: center;
+}
+
+.btn.delete, .btn.cancel {
+  background-color: rgb(174, 104, 104);
+}
+
+.btn:hover {
+  -webkit-filter: brightness(120%);
 }
 
 form {

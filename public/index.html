@@ -27,26 +27,26 @@
   <script id="form-template" type="text/x-handlebars">
     <form id="contact-form">
       <label for="full_name">Full name:</label>
-      <input type="text" id="full_name" name="full_name" value={{full_name}}>
+      <input type="text" id="full_name" class="form-field input" name="full_name" value={{full_name}}>
 
       <label for="email">Email address:</label>
-      <input type="text" id="email" name="email" value={{email}}>
+      <input type="text" id="email" class="form-field input" name="email" value={{email}}>
 
       <label for="phone_number">Telephone number:</label>
-      <input type="text" id="phone_number" name="phone_number" value={{phone_number}}>
+      <input type="text" id="phone_number" class="form-field input" name="phone_number" value={{phone_number}}>
 
       <label for="tags">Tags:</label>
-      <select name="tags" id="tags" multiple></select>
+      <select name="tags" id="tags" class="form-field input" multiple></select>
 
-      <input type="submit" value="Submit">
-      <input id="cancel-add-contacts-btn" type="button" value="Cancel">
+      <input type="submit" class="btn" value="{{action}}">
+      <input id="cancel-add-contacts-btn" class="btn cancel" type="button" value="Cancel">
     </form>
   </script>
   <script id="add-tag-template" type="text/x-handlebars">
     <form id="tag-form">
       <label for="new-tag">Add new tag:</label>
-      <input type="text" id="new-tag" name="new-tag" placeholder="New tag...">
-      <input type="submit" value="Add tag">
+      <input type="text" id="new-tag" class="form-field input" name="new-tag" placeholder="New tag...">
+      <input type="submit" class="btn" value="Add tag">
     </form>
   </script>
 </body>
