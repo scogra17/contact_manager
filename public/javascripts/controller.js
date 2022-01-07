@@ -27,7 +27,7 @@ export default class Controller {
   getAndDisplayContacts = async () => {
     this.model.contacts = await this.model.getContacts();
     this.model.updateTags();
-    this.view.displayTags(this.model.tags);
+    this.view.displayTags(this.model.contactTags(this.filteredContacts()));
     this.view.displayContacts(this.filteredContacts());
   }
 

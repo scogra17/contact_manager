@@ -1,8 +1,8 @@
-import Controller from './controller.js';
 import Model from './model.js';
 import View from './view.js';
+import Controller from './controller.js';
 
-class App {
+class ContactManager {
   constructor() {
     this.model = new Model();
     this.view = new View();
@@ -10,5 +10,6 @@ class App {
   }
 }
 
-const app = new App();
-console.log(app);
+document.addEventListener('DOMContentLoaded', () => {
+  new ContactManager();
+});

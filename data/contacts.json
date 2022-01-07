@@ -1,23 +1,37 @@
 [
   {
-    "full_name": "Liz Nunley",
-    "phone_number": "8045136279",
-    "email": "elizabeth.m.nunley@gmail.com",
-    "tags": "",
-    "id": 9
+    "full_name": "Amor Towles",
+    "phone_number": "111-234-1231",
+    "email": "amor@hotmail.com",
+    "tags": "author,american",
+    "id": 2
   },
   {
-    "full_name": "Scott Graham",
-    "phone_number": "4153596818",
-    "email": "scttgrhm7@gmail.com",
-    "tags": "johnson,scott",
-    "id": 10
+    "full_name": "Richard Feynman",
+    "phone_number": "1 (555) 555 5555",
+    "email": "rich@gmail.com",
+    "tags": "author,scientist",
+    "id": 3
   },
   {
-    "full_name": "Scott Graham",
+    "full_name": "Mike Wazowski",
+    "phone_number": "555 555 5555",
+    "email": "m@gmail.com",
+    "tags": "monster",
+    "id": 4
+  },
+  {
+    "full_name": "Scott",
     "phone_number": "4153596818",
     "email": "scttgrhm7@gmail.com",
-    "tags": "customer service",
-    "id": 11
+    "tags": null,
+    "id": 5
+  },
+  {
+    "full_name": "Mike Modano",
+    "phone_number": "987 654 3210",
+    "email": "mm@gmail.com",
+    "tags": null,
+    "id": 8
   }
 ]

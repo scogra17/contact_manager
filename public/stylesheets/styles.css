@@ -10,6 +10,11 @@ h1 {
   margin-bottom: 30px;
 }
 
+h2 {
+  font-size: 1.5em;
+  margin-bottom: 15px;
+}
+
 .error-message {
   color: red;
 }
@@ -27,19 +32,11 @@ h1 {
   column-gap: 20px;
 }
 
-.contact-card {
-  display: inline-block;
-}
-
 #contacts-list {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   row-gap: 30px;
   margin-top: 30px;
-}
-
-#tag-form {
-  max-height: .2vh;
 }
 
 input[type="submit"], input[type="button"] {
@@ -65,8 +62,8 @@ form input[type="text"] {
   text-decoration: none;
   display: inline-block;
   padding: 5px;
-  background-color: rgb(104, 126, 174);
   border-radius: 2px;
+  background-color: rgb(104, 126, 174);
   color: white;
   text-align: center;
 }
@@ -77,6 +74,13 @@ form input[type="text"] {
 
 .btn:hover {
   -webkit-filter: brightness(120%);
+}
+
+.truncate {
+  width: 180px;
+  white-space: wrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 form {

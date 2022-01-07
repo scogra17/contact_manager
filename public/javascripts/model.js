@@ -30,24 +30,6 @@ export default class Model {
     return contacts;
   }
 
-  async updateTags() {
-    this.contacts.forEach(contact => {
-      if (!contact.tags) return;
-      let tags = contact.tags.split(',');
-      tags.forEach(tag => {
-        if (!this.tags[tag]) {
-          this.tags[tag] = true;
-        }
-      })
-    })
-  }
-
-  addTag(tag) {
-    if (!this.tags[tag]) {
-      this.tags[tag] = true;
-    }
-  }
-
   async getContact(id) {
     let response = await fetch(DOMAIN + `/api/contacts/${id}`, {
       method: 'GET',
@@ -104,5 +86,29 @@ export default class Model {
 
   bindContactsListChanged(handler) {
     this.onContactsListChanged = handler;
+  }
+
+  contactTags(contacts) {
+    let contactTags = [];
+    contacts.forEach(contact => {
+      if (!contact.tags) return;
+      let tags = contact.tags.split(',');
+      tags.forEach(tag => {
+        if (!contactTags[tag]) {
+          contactTags[tag] = true;
+        }
+      })
+    })
+    return contactTags;
+  }
+
+  updateTags() {
+    Object.assign(this.tags, this.contactTags(this.contacts));
+  }
+
+  addTag(tag) {
+    if (!this.tags[tag]) {
+      this.tags[tag] = true;
+    }
   }
 }

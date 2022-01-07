@@ -121,6 +121,7 @@ export default class View {
     this.populateContactFormTags(this.editContactForm, tags);
     this.markContactFormSelectedTags(this.editContactForm, contact);
     this.formsContainer.append(this.editContactForm);
+    this.main.append(this.editFormHeading);
     this.main.append(this.formsContainer);
   }
 
@@ -130,6 +131,7 @@ export default class View {
     this.clearElementChildren(this.formsContainer);
     this.populateContactFormTags(this.addContactForm, tags);
     this.formsContainer.append(this.addContactForm);
+    this.main.append(this.addFormHeading);
     this.main.append(this.formsContainer);
   }
 
