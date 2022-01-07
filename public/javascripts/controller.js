@@ -21,7 +21,7 @@ export default class Controller {
 
     if (this.filterTag) {
       filteredContacts = filteredContacts.filter(contact => {
-        return contact.tags.split(',').includes(this.filterTag);
+        return contact.tags && contact.tags.split(',').includes(this.filterTag);
       })
     }
     return filteredContacts;

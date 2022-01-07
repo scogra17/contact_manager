@@ -26,6 +26,7 @@ export default class Model {
 
   async updateTags() {
     this.contacts.forEach(contact => {
+      if (!contact.tags) return;
       let tags = contact.tags.split(',');
       tags.forEach(tag => {
         if (!this.tags[tag]) {

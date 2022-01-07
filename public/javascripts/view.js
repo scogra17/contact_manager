@@ -13,6 +13,7 @@ export default class View {
   createDOMElements() {
     this.main = document.querySelector('main');
     this.header = document.querySelector('header');
+    this.controlBar = this.createControlBar();
     this.title = this.createTitle('Contact Manager', 'h1');
     this.searchInput = this.createSearchInput();
     this.tagDropdown = this.createTagDropdown();
@@ -34,6 +35,13 @@ export default class View {
   createTagDropdown() {
     let elem = this.createElement('select');
     elem.name = 'tags'
+
+    return elem;
+  }
+
+  createControlBar() {
+    let elem = this.createElement('div');
+    elem.id = 'control-bar'
 
     return elem;
   }
@@ -106,10 +114,13 @@ export default class View {
 
   displayHomeDOMElements() {
     this.clearMainDisplay();
-    this.main.append(
+    this.controlBar.append(
       this.addContactButton,
       this.searchInput,
       this.tagDropdown,
+    )
+    this.main.append(
+      this.controlBar,
       this.contactsList);
     this.displayContacts();
   }
