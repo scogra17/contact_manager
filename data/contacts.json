@@ -1,23 +1,9 @@
 [
   {
-    "id": 1,
-    "full_name": "Naveed Fida",
-    "email": "nf@example.com",
-    "phone_number": "12345678901",
-    "tags": "jon,taggg1"
-  },
-  {
-    "full_name": "Scott Graham",
-    "phone_number": "1231",
-    "email": "1111111@gmail.com",
-    "tags": "taggg1",
-    "id": 3
-  },
-  {
     "full_name": "Scott Graham",
     "phone_number": "4153596818",
     "email": "scttgrhm7@gmail.com",
-    "tags": "taggg1,dsf",
+    "tags": "johnson,scott",
     "id": 6
   },
   {

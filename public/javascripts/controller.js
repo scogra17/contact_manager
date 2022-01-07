@@ -1,6 +1,4 @@
 export default class Controller {
-  // should know nothing about the DOM, HTML elements, CSS, etc.
-
   constructor(model, view) {
     this.model = model
     this.view = view
@@ -78,7 +76,6 @@ export default class Controller {
 
   handleEditContact = async (id) => {
     let contact = await this.model.getContact(id);
-    this.view.clearMainDisplay();
     this.view.displayEditContactForm(contact, this.model.tags);
     this.view.displayAddTagForm();
   }
@@ -87,7 +84,7 @@ export default class Controller {
     let validationError = this.validateContact(contact);
     if (!Object.keys(validationError).length) {
       this.model.editContact(contact);
-      this.view.displayHomeDOMElements();
+      this.view.displayHomeElements();
     } else {
       this.view.clearValidationErrors();
       this.view.displayValidationError(validationError);
@@ -95,18 +92,17 @@ export default class Controller {
   }
 
   handleCancelEditContact = () => {
-    this.view.displayHomeDOMElements();
+    this.view.displayHomeElements();
     this.getAndDisplayContacts();
   }
 
   handleAddContact = () => {
-    this.view.clearMainDisplay();
     this.view.displayAddContactForm(this.model.tags);
     this.view.displayAddTagForm();
   }
 
   handleCancelAddContact = () => {
-    this.view.displayHomeDOMElements();
+    this.view.displayHomeElements();
     this.getAndDisplayContacts();
   }
 
@@ -115,7 +111,7 @@ export default class Controller {
     if (!Object.keys(validationError).length) {
       this.model.addContact(contact);
       this.view.clearAddContactForm();
-      this.view.displayHomeDOMElements();
+      this.view.displayHomeElements();
     } else {
       this.view.clearValidationErrors();
       this.view.displayValidationError(validationError);
@@ -124,7 +120,7 @@ export default class Controller {
 
   handleSubmitAddTag = (tag) => {
     this.model.addTag(tag);
-    this.view.displayTag(tag);
+    this.view.displayNewTagOption(tag);
     this.view.clearAddTagForm();
   }
 }

@@ -2,13 +2,14 @@ export default class View {
   constructor() {
     this.contactTemplate = Handlebars.compile(document.querySelector('#contact-template').innerHTML);
     this.formTemplate = Handlebars.compile(document.querySelector('#form-template').innerHTML);
+    this.addTagTemplate = Handlebars.compile(document.querySelector('#add-tag-template').innerHTML);
 
-    this.createDOMElements();
+    this.createElements();
     this.displayTitle();
-    this.displayHomeDOMElements();
+    this.displayHomeElements();
   }
 
-  createDOMElements() {
+  createElements() {
     // root container elements
     this.main = document.querySelector('main');
     this.header = document.querySelector('header');
@@ -16,161 +17,151 @@ export default class View {
     // non-root container elements
     this.controlBar = this.createControlBar();
     this.formsContainer = this.createFormsContainer();
-
-    this.title = this.createTitle('Contact Manager', 'h1');
-    this.searchInput = this.createSearchInput();
-    this.tagDropdown = this.createTagDropdown();
-    this.addContactButton = this.createButton('Add Contact');
     this.contactsList = this.createContactsList();
     this.editContactForm = this.createEditContactForm();
     this.addContactForm = this.createAddContactForm();
-    this.addTagsForm = this.createAddTagsForm();
+    this.addTagForm = this.createAddTagForm();
+
+    // non-container elements
+    this.title = this.createTitle('Contact Manager', 'h1');
+    this.searchInput = this.createSearchInput();
+    this.tagDropdown = this.createTagDropdown();
+    this.addContactButton = this.createAddContactButton();
+    this.noContactsMessage = this.createNoContactsMessage();
+    this.filterTagsPlaceholder = this.createFilterTagsPlaceholder();
   }
 
   createSearchInput() {
-    // let elem = this.createElement('input');
-    let elem = this.createElement({tag: 'input'})
-    elem.type = 'text';
-    elem.placeholder = 'Search';
-    elem.name = 'search';
-    return elem;
+    return this.createElement({
+      tag: 'input',
+      attributes: {'type': 'text', 'name': 'search', 'placeholder': 'Search'}
+    });
   }
 
   createTagDropdown() {
-    let elem = this.createElement({tag: 'select'});
-    elem.name = 'tags'
-    return elem;
+    return this.createElement({tag: 'select', attributes: {'name': 'tags'}});
   }
 
   createControlBar() {
-    let elem = this.createElement({tag: 'div', id: 'control-bar'});
-    return elem;
+    return this.createElement({tag: 'div', id: 'control-bar'});
   }
 
   createFormsContainer() {
-    let elem = this.createElement({tag: 'div', id: 'forms-container'});
-    return elem;
+    return this.createElement({tag: 'div', id: 'forms-container'});
   }
 
-  createButton(text) {
-    let elem = this.createElement({tag: 'a', attributes: {'href': '#'}});
-    elem.setAttribute('href', '#');
-    elem.textContent = text;
-    return elem;
+  createAddContactButton(text) {
+    return this.createElement({
+      tag: 'a',
+      textContent: 'Add Contact',
+      attributes: {'href': '#'}
+    });
   }
 
   createContactsList() {
-    let elem = this.createElement({tag: 'ul', id: 'contacts-list'});
+    return this.createElement({tag: 'ul', id: 'contacts-list'});
+  }
+
+  createEditContactForm() { return this.createContactForm('Edit contact') };
+
+  createAddContactForm() { return this.createContactForm('Add contact') };
+
+  createAddTagForm() {
+    let elem = this.createElement({tag: 'div', classes: ['tag-form']});
+    elem.innerHTML = this.addTagTemplate();
     return elem;
   }
 
-  createEditContactForm() {
-    return this.createContactForm('Edit contact');
+  createNoContactsMessage() {
+    return this.createElement({tag: 'p', textContent: 'There are no contacts.'});
   }
 
-  createAddContactForm() {
-    return this.createContactForm('Add contact');
+  createFilterTagsPlaceholder() {
+    return this.createElement({tag: 'option', textContent: 'Filter by tag', attributes: {'value': '', 'selected': null}});
   }
 
-  createAddTagsForm() {
-    let elem = this.createElement({tag: 'form', id: 'tag-form'});
-    let label = this.createElement({tag: 'label', attributes: {'for': 'new-tag'}});
-    label.textContent = 'Add new tag';
-    let textInput = this.createElement({tag: 'input', id: 'new-tag', attributes: {'type': 'text', 'name': 'new-tag', 'placeholder': 'New tag...'}});
-    let submitInput = this.createElement({tag: 'input', attributes: {'type': 'submit', 'value': 'Add tag'}});
+  displayTitle() { this.header.append(this.title) };
 
-    elem.appendChild(label);
-    elem.appendChild(textInput);
-    elem.appendChild(submitInput);
-    return elem;
+  displayHomeElements() {
+    this.clearElementChildren(this.main);
+    this.controlBar.append(this.addContactButton, this.searchInput, this.tagDropdown);
+    this.main.append(this.controlBar,this.contactsList);
+    this.displayContacts();
   }
 
-  // Display methods
+  displayContacts(contacts = []) {
+    this.clearElementChildren(this.contactsList);
+    if (contacts.length === 0) {
+      this.contactsList.append(this.noContactsMessage);
+    } else {
+      let template = contacts.map(contact => this.contactTemplate(contact));
+      this.contactsList.innerHTML = template.join("");
+    }
+  }
 
-  displayTitle() {
-    this.header.append(this.title);
+  displayTags(tags) {
+    this.clearElementChildren(this.tagDropdown);
+    this.tagDropdown.appendChild(this.filterTagsPlaceholder);
+    let option;
+    Object.keys(tags).forEach(tag => {
+      option = this.createElement({tag: 'option', textContent: tag, attributes: {'value': tag}});
+      this.tagDropdown.appendChild(option);
+    })
   }
 
   displayEditContactForm(contact, tags) {
+    this.clearValidationErrors();
+    this.clearElementChildren(this.main);
     this.clearElementChildren(this.formsContainer);
-    this.populateFormWithJSON(this.editContactForm, contact);
-    this.populateFormWithTags(this.editContactForm, tags);
-    this.markSelectedTags(this.editContactForm, contact);
+
+    this.populateContactFormContact(this.editContactForm, contact);
+    this.populateContactFormTags(this.editContactForm, tags);
+    this.markContactFormSelectedTags(this.editContactForm, contact);
     this.formsContainer.append(this.editContactForm);
     this.main.append(this.formsContainer);
   }
 
   displayAddContactForm(tags) {
+    this.clearValidationErrors();
+    this.clearElementChildren(this.main);
     this.clearElementChildren(this.formsContainer);
-    this.populateFormWithTags(this.addContactForm, tags);
+    this.populateContactFormTags(this.addContactForm, tags);
     this.formsContainer.append(this.addContactForm);
     this.main.append(this.formsContainer);
   }
 
-  displayTag(tag) {
-    let option = this.createOptionElement(tag, tag);
-    this.getElement('select').append(option);
-  }
-
   displayAddTagForm() {
-    this.formsContainer.append(this.addTagsForm);
+    this.formsContainer.append(this.addTagForm);
   }
 
-  displayHomeDOMElements() {
-    this.clearMainDisplay();
-    this.controlBar.append(
-      this.addContactButton,
-      this.searchInput,
-      this.tagDropdown,
-    )
-    this.main.append(
-      this.controlBar,
-      this.contactsList);
-    this.displayContacts();
-  }
-
-  displayTags(tags) {
-    this.clearElementChildren(this.tagDropdown);
-
-    let placeholder = this.createElement({tag: 'option', attributes: {'value': '', 'selected': null}});
-    placeholder.textContent = "Filter by tag"
-
-    let elems = [placeholder];
-    let option;
-    for (const tag in tags) {
-      option = this.createElement({tag: 'option', attributes: {'value': tag}});
-      option.textContent = tag;
-      elems.push(option);
-    }
-    elems.forEach(elem => {
-      this.tagDropdown.appendChild(elem);
-    })
+  displayNewTagOption(tag) {
+    let option = this.createOptionElement(tag, tag);
+    document.querySelector('#tags').append(option);
   }
 
   displayValidationError(validationErrors) {
-    let labels = this.getElement('#contact-form').querySelectorAll('label');
-    let label;
+    let labels = document.querySelector('#contact-form').querySelectorAll('label');
     let validationError;
     let message;
 
-    for (let i = 0; i < labels.length; i += 1) {
-      label = labels[i];
+    labels.forEach(label => {
       validationError = validationErrors[label.getAttribute('for')];
       if (validationError) {
-        message = this.createElement({tag: 'p', classes: ['error-message']});
-        message.textContent = validationError;
-        label.appendChild(message);
+        message = this.createElement({tag: 'p', textContent: validationError, classes: ['error-message']});
+        label.insertAdjacentElement('afterend', message);
       }
+    })
+  }
+
+  clearElementChildren(element) {
+    while (element.firstChild) {
+      element.removeChild(element.firstChild);
     }
   }
 
   clearValidationErrors() {
-    let errorMessages = document.querySelectorAll('.error-message');
-    if (errorMessages) {
-      for (let i = 0; i < errorMessages.length; i += 1) {
-        errorMessages[i].remove();
-      }
-    }
+    let errorMessages = this.formsContainer.querySelectorAll('.error-message');
+    if (errorMessages) errorMessages.forEach(e => e.remove());
   }
 
   clearAddContactForm() {
@@ -180,62 +171,60 @@ export default class View {
     this.addContactForm.querySelector('#tags').value = '';
   }
 
-  clearAddTagForm() {
-    this.addTagsForm.querySelector('#new-tag').value = '';
+  clearAddTagForm() { this.addTagForm.querySelector('#new-tag').value = '' };
+
+  populateContactFormContact(form, contact) {
+    let input;
+    Object.keys(contact).forEach(k => {
+      input = form.querySelector('#' + k);
+      if (input) input.setAttribute('value', contact[k]);
+    })
+    form.id = contact['id'];
   }
 
-  clearMainDisplay() {
-    this.clearElementChildren(this.main);
+  populateContactFormTags(form, tags) {
+    let selectElement = form.querySelector('#tags');
+    this.clearElementChildren(selectElement);
+
+    let option;
+    Object.keys(tags).forEach(tag => {
+      option = this.createOptionElement(tag, tag);
+      selectElement.append(option);
+    })
   }
 
-  clearElementChildren(element) {
-    while (element.firstChild) {
-      element.removeChild(element.firstChild);
+  markContactFormSelectedTags(form, contact) {
+    if (!contact.tags) return;
+    let contactTags = contact.tags.split(',');
+    let options = form.querySelector('select').querySelectorAll('option');
+    let option;
+    for (let i = 0; i < options.length; i += 1) {
+      option = options[i];
+      if (contactTags.includes(option.value)) {
+        option.setAttribute('selected', true);
+      }
     }
   }
-
-  // called every time a contact is changed, added or removed
-  // called with `contacts` from Model to keep the view in sync with the Model
-  displayContacts(contacts = []) {
-    while (this.contactsList.firstChild) {
-      this.contactsList.removeChild(this.contactsList.firstChild);
-    }
-
-    if (contacts.length === 0) {
-      const p = this.createElement({tag: 'p'});
-      p.textContent = "There are no contacts.";
-      this.contactsList.append(p);
-    } else {
-      let template = contacts.map(contact => {
-        return this.contactTemplate(contact);
-      })
-      this.contactsList.innerHTML = template.join("");
-    }
-  }
-
-
-  // Event listeners
 
   bindSearchContact(handler) {
     this.searchInput.addEventListener('keyup', event => {
       event.preventDefault();
-      handler(this._searchInputText)
+      handler(this.searchInput.value)
     })
   }
 
   bindFilterByTag(handler) {
     this.tagDropdown.addEventListener('change', event => {
       event.preventDefault();
-      let name = event.target.options[event.target.options.selectedIndex].value
-      handler(name)
+      handler(event.target.options[event.target.options.selectedIndex].value);
     })
   }
 
   bindDeleteContact(handler) {
     this.contactsList.addEventListener('click', event => {
       if (event.target.classList.contains('delete')) {
-        const id = parseInt(event.target.parentElement.id);
-        handler(id);
+        let contactID = parseInt(event.target.parentElement.id);
+        handler(contactID);
       }
     })
   }
@@ -244,8 +233,8 @@ export default class View {
     this.contactsList.addEventListener('click', event => {
       event.preventDefault();
       if (event.target.classList.contains('edit')) {
-        const id = parseInt(event.target.parentElement.id);
-        handler(id);
+        let contactID = parseInt(event.target.parentElement.id);
+        handler(contactID);
       }
     })
   }
@@ -289,13 +278,12 @@ export default class View {
   }
 
   bindSubmitAddTag(handler) {
-    this.addTagsForm.addEventListener('submit', event => {
+    this.addTagForm.querySelector('form').addEventListener('submit', event => {
       event.preventDefault();
-      let tag = Object.values(this.prepareFormData(this.addTagsForm))[0];
+      let tag = Object.values(this.prepareFormData(this.addTagForm.querySelector('form')))[0];
       handler(tag)
     })
   }
-
 
   // Helper methods
 
@@ -307,11 +295,12 @@ export default class View {
     return elem;
   }
 
-  createTitle(text, type) {
-    let elem = this.createElement({tag: type});
-    elem.textContent = text;
-    return elem;
+  createOptionElement(value, text) {
+    let option = this.createElement({tag: 'option', textContent: text, attributes: {'value': value}});
+    return option;
   }
+
+  createTitle(text, type) { return this.createElement({tag: type, textContent: text}) };
 
   formDataToJson(formData) {
     let json = {};
@@ -331,70 +320,12 @@ export default class View {
     return json;
   }
 
-  populateFormWithJSON(form, data) {
-    for (const k in data) {
-      let input = form.querySelector('#' + k);
-      if (input) {
-        input.setAttribute('value', data[k]);
-      }
-    }
-    form.id = data['id'];
-  }
-
-  populateFormWithTags(form, tags) {
-    let select = form.querySelector('select');
-    this.clearElementChildren(select);
-
-    let tagOptions = [];
-    let option;
-    Object.keys(tags).forEach(tag => {
-      option = this.createOptionElement(tag, tag);
-      tagOptions.push(option);
-    })
-
-    tagOptions.forEach(tagOption => {
-      select.append(tagOption);
-    })
-  }
-
-  createOptionElement(value, text) {
-    let option = this.createElement({tag: 'option', attributes: {'value': value}});
-    option.textContent = text;
-    return option;
-  }
-
-  markSelectedTags(form, contact) {
-    if (!contact.tags) return;
-    let contactTags = contact.tags.split(',');
-    let options = form.querySelector('select').querySelectorAll('option');
-    let option;
-    for (let i = 0; i < options.length; i += 1) {
-      option = options[i];
-      if (contactTags.includes(option.value)) {
-        option.setAttribute('selected', true);
-      }
-    }
-  }
-
   createElement(elem) {
     const element = document.createElement(elem.tag)
     if (elem.classes) elem.classes.forEach(c => element.classList.add(c))
     if (elem.id) element.id = elem.id;
     if (elem.attributes) Object.keys(elem.attributes).forEach(a => element.setAttribute(a, elem.attributes[a]))
+    if (elem.textContent) element.textContent = elem.textContent;
     return element
-  }
-
-  getElement(selector) {
-    const element = document.querySelector(selector)
-
-    return element
-  }
-
-  _resetSearchInput() {
-    this.searchInput.value = ''
-  }
-
-  get _searchInputText() {
-    return this.searchInput.value
   }
 }
