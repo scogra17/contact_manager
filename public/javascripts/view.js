@@ -8,13 +8,15 @@ export default class View {
     this.displayHomeDOMElements();
   }
 
-  // DOM element creation methods
-
   createDOMElements() {
+    // root container elements
     this.main = document.querySelector('main');
     this.header = document.querySelector('header');
+
+    // non-root container elements
     this.controlBar = this.createControlBar();
     this.formsContainer = this.createFormsContainer();
+
     this.title = this.createTitle('Contact Manager', 'h1');
     this.searchInput = this.createSearchInput();
     this.tagDropdown = this.createTagDropdown();
@@ -26,7 +28,8 @@ export default class View {
   }
 
   createSearchInput() {
-    let elem = this.createElement('input');
+    // let elem = this.createElement('input');
+    let elem = this.createElement({tag: 'input'})
     elem.type = 'text';
     elem.placeholder = 'Search';
     elem.name = 'search';
@@ -34,35 +37,31 @@ export default class View {
   }
 
   createTagDropdown() {
-    let elem = this.createElement('select');
+    let elem = this.createElement({tag: 'select'});
     elem.name = 'tags'
-
     return elem;
   }
 
   createControlBar() {
-    let elem = this.createElement('div');
-    elem.id = 'control-bar'
-
+    let elem = this.createElement({tag: 'div', id: 'control-bar'});
     return elem;
   }
 
   createFormsContainer() {
-    let elem = this.createElement('div');
-    elem.id = 'forms-container'
-
+    let elem = this.createElement({tag: 'div', id: 'forms-container'});
     return elem;
   }
 
   createButton(text) {
-    let elem = this.createElement('a');
+    let elem = this.createElement({tag: 'a', attributes: {'href': '#'}});
     elem.setAttribute('href', '#');
     elem.textContent = text;
     return elem;
   }
 
   createContactsList() {
-    return this.createElement('ul', 'contacts-list');
+    let elem = this.createElement({tag: 'ul', id: 'contacts-list'});
+    return elem;
   }
 
   createEditContactForm() {
@@ -74,19 +73,12 @@ export default class View {
   }
 
   createAddTagsForm() {
-    let elem = this.createElement('form');
-    elem.setAttribute('id', 'tag-form');
-    let label = this.createElement('label');
-    label.setAttribute('for', 'new-tag');
+    let elem = this.createElement({tag: 'form', id: 'tag-form'});
+    let label = this.createElement({tag: 'label', attributes: {'for': 'new-tag'}});
     label.textContent = 'Add new tag';
-    let textInput = this.createElement('input');
-    textInput.setAttribute('type', 'text');
-    textInput.setAttribute('name', 'new-tag');
-    textInput.setAttribute('id', 'new-tag');
-    textInput.setAttribute('placeholder', 'New tag...');
-    let submitInput = this.createElement('input');
-    submitInput.setAttribute('type', 'submit');
-    submitInput.setAttribute('value', 'Add tag');
+    let textInput = this.createElement({tag: 'input', id: 'new-tag', attributes: {'type': 'text', 'name': 'new-tag', 'placeholder': 'New tag...'}});
+    let submitInput = this.createElement({tag: 'input', attributes: {'type': 'submit', 'value': 'Add tag'}});
+
     elem.appendChild(label);
     elem.appendChild(textInput);
     elem.appendChild(submitInput);
@@ -140,16 +132,13 @@ export default class View {
   displayTags(tags) {
     this.clearElementChildren(this.tagDropdown);
 
-    let placeholder = this.createElement('option');
-    placeholder.value = ''
-    placeholder.setAttribute('selected', null);
+    let placeholder = this.createElement({tag: 'option', attributes: {'value': '', 'selected': null}});
     placeholder.textContent = "Filter by tag"
 
     let elems = [placeholder];
     let option;
     for (const tag in tags) {
-      option = this.createElement('option');
-      option.value = tag;
+      option = this.createElement({tag: 'option', attributes: {'value': tag}});
       option.textContent = tag;
       elems.push(option);
     }
@@ -168,8 +157,7 @@ export default class View {
       label = labels[i];
       validationError = validationErrors[label.getAttribute('for')];
       if (validationError) {
-        message = this.createElement('p');
-        message.classList.add('error-message');
+        message = this.createElement({tag: 'p', classes: ['error-message']});
         message.textContent = validationError;
         label.appendChild(message);
       }
@@ -214,7 +202,7 @@ export default class View {
     }
 
     if (contacts.length === 0) {
-      const p = this.createElement('p');
+      const p = this.createElement({tag: 'p'});
       p.textContent = "There are no contacts.";
       this.contactsList.append(p);
     } else {
@@ -312,7 +300,7 @@ export default class View {
   // Helper methods
 
   createContactForm(title, contact = {}) {
-    let elem = this.createElement('div', 'contact-form');
+    let elem = this.createElement({tag: 'div', classes: ['contact-form']});
     let heading = this.createTitle(title, 'h3');
     elem.innerHTML = this.formTemplate(contact);
     elem.insertBefore(heading, elem.firstChild)
@@ -320,7 +308,7 @@ export default class View {
   }
 
   createTitle(text, type) {
-    let elem = this.createElement(type);
+    let elem = this.createElement({tag: type});
     elem.textContent = text;
     return elem;
   }
@@ -370,13 +358,13 @@ export default class View {
   }
 
   createOptionElement(value, text) {
-    let option = this.createElement('option');
-    option.value = value;
+    let option = this.createElement({tag: 'option', attributes: {'value': value}});
     option.textContent = text;
     return option;
   }
 
   markSelectedTags(form, contact) {
+    if (!contact.tags) return;
     let contactTags = contact.tags.split(',');
     let options = form.querySelector('select').querySelectorAll('option');
     let option;
@@ -388,10 +376,11 @@ export default class View {
     }
   }
 
-  createElement(tag, className) {
-    const element = document.createElement(tag)
-    if (className) element.classList.add(className)
-
+  createElement(elem) {
+    const element = document.createElement(elem.tag)
+    if (elem.classes) elem.classes.forEach(c => element.classList.add(c))
+    if (elem.id) element.id = elem.id;
+    if (elem.attributes) Object.keys(elem.attributes).forEach(a => element.setAttribute(a, elem.attributes[a]))
     return element
   }
 

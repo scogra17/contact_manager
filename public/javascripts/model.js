@@ -57,7 +57,7 @@ export default class Model {
       full_name: contact.full_name,
       email: contact.email,
       phone_number: contact.phone_number,
-      tags: contact.tags,
+      tags: contact.tags || '',
     })
 
     let response = await fetch(DOMAIN + `/api/contacts/${contact.id}`, {
