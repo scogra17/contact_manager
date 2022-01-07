@@ -14,6 +14,7 @@ export default class View {
     this.main = document.querySelector('main');
     this.header = document.querySelector('header');
     this.controlBar = this.createControlBar();
+    this.formsContainer = this.createFormsContainer();
     this.title = this.createTitle('Contact Manager', 'h1');
     this.searchInput = this.createSearchInput();
     this.tagDropdown = this.createTagDropdown();
@@ -46,6 +47,13 @@ export default class View {
     return elem;
   }
 
+  createFormsContainer() {
+    let elem = this.createElement('div');
+    elem.id = 'forms-container'
+
+    return elem;
+  }
+
   createButton(text) {
     let elem = this.createElement('a');
     elem.setAttribute('href', '#');
@@ -58,11 +66,11 @@ export default class View {
   }
 
   createEditContactForm() {
-    return this.createContactForm('Edit');
+    return this.createContactForm('Edit contact');
   }
 
   createAddContactForm() {
-    return this.createContactForm('Add');
+    return this.createContactForm('Add contact');
   }
 
   createAddTagsForm() {
@@ -92,15 +100,19 @@ export default class View {
   }
 
   displayEditContactForm(contact, tags) {
+    this.clearElementChildren(this.formsContainer);
     this.populateFormWithJSON(this.editContactForm, contact);
     this.populateFormWithTags(this.editContactForm, tags);
     this.markSelectedTags(this.editContactForm, contact);
-    this.main.append(this.editContactForm);
+    this.formsContainer.append(this.editContactForm);
+    this.main.append(this.formsContainer);
   }
 
   displayAddContactForm(tags) {
-    this.populateFormWithTags(this.addContactForm, tags)
-    this.main.append(this.addContactForm);
+    this.clearElementChildren(this.formsContainer);
+    this.populateFormWithTags(this.addContactForm, tags);
+    this.formsContainer.append(this.addContactForm);
+    this.main.append(this.formsContainer);
   }
 
   displayTag(tag) {
@@ -109,7 +121,7 @@ export default class View {
   }
 
   displayAddTagForm() {
-    this.main.append(this.addTagsForm);
+    this.formsContainer.append(this.addTagsForm);
   }
 
   displayHomeDOMElements() {
@@ -185,7 +197,6 @@ export default class View {
   }
 
   clearMainDisplay() {
-    // this._resetSearchInput();
     this.clearElementChildren(this.main);
   }
 
@@ -301,7 +312,7 @@ export default class View {
   // Helper methods
 
   createContactForm(title, contact = {}) {
-    let elem = this.createElement('div', `${title.toLowerCase()}-contact-form`);
+    let elem = this.createElement('div', 'contact-form');
     let heading = this.createTitle(title, 'h3');
     elem.innerHTML = this.formTemplate(contact);
     elem.insertBefore(heading, elem.firstChild)
