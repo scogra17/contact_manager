@@ -91,7 +91,6 @@ class View {
     this.clearElementChildren(this.main);
     this.controlBar.append(this.addContactButton, this.searchInput, this.tagDropdown);
     this.main.append(this.controlBar,this.contactsList);
-    // this.displayContacts();
   }
 
   displayContacts(contacts) {
@@ -142,17 +141,19 @@ class View {
   }
 
   displayNewTagOption(tag) {
+    this.view.clearAddTagForm();
     let option = this.createOptionElement(tag, tag);
     document.querySelector('#tags').append(option);
   }
 
-  displayValidationError(validationErrors) {
+  displayValidationErrors(errors) {
+    this.clearValidationErrors();
     let labels = document.querySelector('#contact-form').querySelectorAll('label');
     let validationError;
     let message;
 
     labels.forEach(label => {
-      validationError = validationErrors[label.getAttribute('for')];
+      validationError = errors[label.getAttribute('for')];
       if (validationError) {
         message = this.createElement({tag: 'p', textContent: `Invalid. ${validationError}`, classes: ['error-message']});
         label.insertAdjacentElement('afterend', message);

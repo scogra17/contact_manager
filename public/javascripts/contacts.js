@@ -9,10 +9,6 @@ class Contacts {
     return this.contacts.length === 0;
   }
 
-  addContact() {
-    this.contacts.push(contact);
-  }
-
   getContact(id) {
     let contact = this.contacts.filter(contact => contact.id === id);
     if (contact) return contact[0];
@@ -21,11 +17,7 @@ class Contacts {
   getAllUniqueContactsTags() {
     let tags = {};
     this.contacts.forEach(contact => {
-      if (contact.tags) {
-        contact.tags.forEach(tag => {
-          if (!tags[tag]) { tags[tag] = true }
-        })
-      }
+      contact.tags.forEach(tag => { if (!tags[tag]) { tags[tag] = true }})
     })
     return tags;
   }

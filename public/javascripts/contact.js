@@ -1,5 +1,8 @@
 "use strict";
 
+const EMAIL_REGEXP = new RegExp('[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}', 'i'),
+      PHONE_REGEXP = new RegExp('[0-9]{3}-[0-9]{3}-[0-9]{4}');
+
 class Contact {
   constructor(contact) {
     this.id = contact.id;
@@ -40,15 +43,15 @@ class Contact {
   emailValidationError() {
     if (!this.email) {
       return 'Must be greater than 0 characters';
-    } else if (!this.email.includes('@')) {
-      return 'Must contain @ symbol';
+    } else if (!EMAIL_REGEXP.test(this.email)) {
+      return 'Must be in the form username@server.domain';
     }
   }
 
   phoneNumberValidationError() {
     if (!this.phoneNumber) {
       return 'Must be greater than 0 characters';
-    } else if (!this.phoneNumber.includes('-')) {
+    } else if (!PHONE_REGEXP.test(this.phoneNumber)) {
       return 'Must be in the form ###-###-####';
     }
   }
