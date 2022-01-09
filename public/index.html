@@ -13,9 +13,9 @@
   <main></main>
   <script id="contact-template" type="text/x-handlebars">
     <li id={{id}} class="contact-card truncate">
-      <h4>{{full_name}}</h4>
+      <h4>{{fullName}}</h4>
       <h5>Phone number:</h5>
-      <p>{{phone_number}}</p>
+      <p>{{phoneNumber}}</p>
       <h5>Email:</h5>
       <p>{{email}}</p>
       <h5>Tags:</h5>
@@ -26,14 +26,14 @@
   </script>
   <script id="form-template" type="text/x-handlebars">
     <form id="contact-form">
-      <label for="full_name">Full name:</label>
-      <input type="text" id="full_name" class="form-field input" name="full_name" value={{full_name}}>
+      <label for="fullName">Full name:</label>
+      <input type="text" id="fullName" class="form-field input" name="fullName" value={{fullName}}>
 
       <label for="email">Email address:</label>
       <input type="text" id="email" class="form-field input" name="email" value={{email}}>
 
-      <label for="phone_number">Telephone number:</label>
-      <input type="text" id="phone_number" class="form-field input" name="phone_number" value={{phone_number}}>
+      <label for="phoneNumber">Telephone number:</label>
+      <input type="text" id="phoneNumber" class="form-field input" name="phoneNumber" value={{phoneNumber}}>
 
       <label for="tags">Tags:</label>
       <select name="tags" id="tags" class="form-field input" multiple></select>
@@ -50,5 +50,10 @@
     </form>
   </script>
 </body>
+  <script src="/javascripts/controller.js"></script>
+  <script src="/javascripts/model.js"></script>
+  <script src="/javascripts/view.js"></script>
+  <script src="/javascripts/contacts.js"></script>
+  <script src="/javascripts/contact.js"></script>
   <script type="module" src="/javascripts/contact_manager.js"></script>
 </html>
