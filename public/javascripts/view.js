@@ -1,4 +1,6 @@
-export default class View {
+"use strict";
+
+class View {
   constructor() {
     this.contactTemplate = Handlebars.compile(document.querySelector('#contact-template').innerHTML);
     this.formTemplate = Handlebars.compile(document.querySelector('#form-template').innerHTML);
@@ -89,15 +91,15 @@ export default class View {
     this.clearElementChildren(this.main);
     this.controlBar.append(this.addContactButton, this.searchInput, this.tagDropdown);
     this.main.append(this.controlBar,this.contactsList);
-    this.displayContacts();
+    // this.displayContacts();
   }
 
-  displayContacts(contacts = []) {
+  displayContacts(contacts) {
     this.clearElementChildren(this.contactsList);
-    if (contacts.length === 0) {
+    if (contacts.isEmpty()) {
       this.contactsList.append(this.noContactsMessage);
     } else {
-      let template = contacts.map(contact => this.contactTemplate(contact));
+      let template = contacts.contacts.map(contact => this.contactTemplate(contact));
       this.contactsList.innerHTML = template.join("");
     }
   }
@@ -152,7 +154,7 @@ export default class View {
     labels.forEach(label => {
       validationError = validationErrors[label.getAttribute('for')];
       if (validationError) {
-        message = this.createElement({tag: 'p', textContent: validationError, classes: ['error-message']});
+        message = this.createElement({tag: 'p', textContent: `Invalid. ${validationError}`, classes: ['error-message']});
         label.insertAdjacentElement('afterend', message);
       }
     })
@@ -170,9 +172,9 @@ export default class View {
   }
 
   clearAddContactForm() {
-    this.addContactForm.querySelector('#full_name').value = '';
+    this.addContactForm.querySelector('#fullName').value = '';
     this.addContactForm.querySelector('#email').value = '';
-    this.addContactForm.querySelector('#phone_number').value = '';
+    this.addContactForm.querySelector('#phoneNumber').value = '';
     this.addContactForm.querySelector('#tags').value = '';
   }
 
@@ -200,12 +202,11 @@ export default class View {
 
   markContactFormSelectedTags(form, contact) {
     if (!contact.tags) return;
-    let contactTags = contact.tags.split(',');
     let options = form.querySelector('select').querySelectorAll('option');
     let option;
     for (let i = 0; i < options.length; i += 1) {
       option = options[i];
-      if (contactTags.includes(option.value)) {
+      if (contact.tags.includes(option.value)) {
         option.setAttribute('selected', true);
       }
     }

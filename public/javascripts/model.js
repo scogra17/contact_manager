@@ -1,10 +1,11 @@
+"use strict";
 const DOMAIN = 'http://localhost:3000';
 
-export default class Model {
+class Model {
   constructor() {
     this.contacts = [];
     this.tags = {};
-    this.getContacts();
+    // this.getContacts();
   }
 
   validateContact = (contact) => {
@@ -42,10 +43,10 @@ export default class Model {
   async editContact(contact) {
     let json = JSON.stringify({
       id: contact.id,
-      full_name: contact.full_name,
+      full_name: contact.full_name || contact.fullName,
       email: contact.email,
-      phone_number: contact.phone_number,
-      tags: contact.tags || '',
+      phone_number: contact.phone_number || contact.phoneNumber,
+      tags: contact.tags.join(',') || '',
     })
 
     let response = await fetch(DOMAIN + `/api/contacts/${contact.id}`, {
@@ -62,7 +63,12 @@ export default class Model {
   }
 
   async addContact(contact) {
-    let json = JSON.stringify(contact);
+    let json = JSON.stringify({
+      full_name: contact.full_name || contact.fullName,
+      email: contact.email,
+      phone_number: contact.phone_number || contact.phoneNumber,
+      tags: contact.tags.join(',') || '',
+    })
 
     let response = await fetch(DOMAIN + '/api/contacts', {
       method: 'POST',
@@ -110,5 +116,9 @@ export default class Model {
     if (!this.tags[tag]) {
       this.tags[tag] = true;
     }
+  }
+
+  addTags(tags) {
+    Object.assign(this.tags, tags);
   }
 }

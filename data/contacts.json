@@ -1,19 +1,5 @@
 [
   {
-    "full_name": "Amor Towles",
-    "phone_number": "111-234-1231",
-    "email": "amor@hotmail.com",
-    "tags": "author,american",
-    "id": 2
-  },
-  {
-    "full_name": "Richard Feynman",
-    "phone_number": "1 (555) 555 5555",
-    "email": "rich@gmail.com",
-    "tags": "author,scientist",
-    "id": 3
-  },
-  {
     "full_name": "Mike Wazowski",
     "phone_number": "555 555 5555",
     "email": "m@gmail.com",
@@ -33,5 +19,12 @@
     "email": "mm@gmail.com",
     "tags": null,
     "id": 8
+  },
+  {
+    "full_name": "Scott Graham",
+    "phone_number": "415-359-6818",
+    "email": "scttgrhm7@gmail.com",
+    "tags": "",
+    "id": 9
   }
 ]

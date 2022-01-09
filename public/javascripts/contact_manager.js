@@ -1,12 +1,11 @@
-import Model from './model.js';
-import View from './view.js';
-import Controller from './controller.js';
+"use strict";
 
 class ContactManager {
   constructor() {
+    this.contacts = new Contacts();
     this.model = new Model();
     this.view = new View();
-    this.controller = new Controller(this.model, this.view);
+    this.controller = new Controller(this.model, this.view, this.contacts);
   }
 }
 

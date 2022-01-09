@@ -1,34 +1,46 @@
-export default class Controller {
-  constructor(model, view) {
+"use strict";
+
+class Controller {
+  constructor(model, view, contacts) {
     this.model = model
     this.view = view
+    this.contacts = contacts
+
     this.searchTerm = '';
     this.tagFilter = '';
+    this.filteredContacts = this.filterContacts();
 
     this.getAndDisplayContacts();
     this.bindEvents();
   }
 
-  filteredContacts() {
-    let filteredContacts = Object.assign(this.model.contacts);
-    if (this.searchTerm) {
-      filteredContacts = filteredContacts.filter(contact => {
-        return contact.full_name.toLowerCase().includes(this.searchTerm.toLocaleLowerCase());
+  filterContacts() {
+    return new Contacts(
+      this.contacts.contacts.filter(contact => {
+        if (!this.tagFilter) return true;
+        return contact.containsTag(this.tagFilter);
+      }).filter(contact => {
+        if (!this.searchTerm) return true;
+        return contact.matchesSearch(this.searchTerm);
       })
-    }
-    if (this.tagFilter) {
-      filteredContacts = filteredContacts.filter(contact => {
-        return contact.tags && contact.tags.split(',').includes(this.tagFilter);
-      })
-    }
-    return filteredContacts;
+    )
   }
+
+  modelContactsToEntityContacts(contacts) {
+    return new Contacts(
+      contacts.map(contact => this.modelContactToEntityContact(contact)));
+  }
+
+  modelContactToEntityContact(contact) { return new Contact(contact) };
 
   getAndDisplayContacts = async () => {
     this.model.contacts = await this.model.getContacts();
-    this.model.updateTags();
-    this.view.displayTags(this.model.contactTags(this.filteredContacts()));
-    this.view.displayContacts(this.filteredContacts());
+    this.contacts = this.modelContactsToEntityContacts(this.model.contacts);
+    this.model.addTags(this.contacts.getAllUniqueContactsTags());
+
+    this.filteredContacts = this.filterContacts();
+    this.view.displayTags(this.filteredContacts.getAllUniqueContactsTags());
+    this.view.displayContacts(this.filteredContacts);
   }
 
   bindEvents() {
@@ -47,12 +59,12 @@ export default class Controller {
 
   handleSearchContacts = (searchText) => {
     this.searchTerm = searchText;
-    this.view.displayContacts(this.filteredContacts());
+    this.view.displayContacts(this.filterContacts());
   }
 
   handleFilterByTag = (tag) => {
     this.tagFilter = tag;
-    this.view.displayContacts(this.filteredContacts());
+    this.view.displayContacts(this.filterContacts());
   }
 
   handleDeleteContact = (id) => {
@@ -61,20 +73,20 @@ export default class Controller {
     }
   }
 
-  handleEditContact = async (id) => {
-    let contact = await this.model.getContact(id);
+  handleEditContact = (id) => {
+    let contact = this.contacts.getContact(id);
     this.view.displayEditContactForm(contact, this.model.tags);
     this.view.displayAddTagForm();
   }
 
-  handleSubmitEditContact = (contact) => {
-    let validationError = this.model.validateContact(contact);
-    if (!Object.keys(validationError).length) {
+  handleSubmitEditContact = (contactJSON) => {
+    let contact = new Contact(contactJSON);
+    if (contact.isValid()) {
       this.model.editContact(contact);
       this.view.displayHomeElements();
     } else {
       this.view.clearValidationErrors();
-      this.view.displayValidationError(validationError);
+      this.view.displayValidationError(contact.validationErrors());
     }
   }
 
@@ -93,15 +105,15 @@ export default class Controller {
     this.getAndDisplayContacts();
   }
 
-  handleSubmitAddContact = (contact) => {
-    let validationError = this.model.validateContact(contact);
-    if (!Object.keys(validationError).length) {
+  handleSubmitAddContact = (contactJSON) => {
+    let contact = new Contact(contactJSON);
+    if (contact.isValid()) {
       this.model.addContact(contact);
-      this.view.clearAddContactForm();
+      this.view.clearAddContactForm(); // TODO: delete? redundant?
       this.view.displayHomeElements();
     } else {
       this.view.clearValidationErrors();
-      this.view.displayValidationError(validationError);
+      this.view.displayValidationError(contact.validationErrors());
     }
   }
 
