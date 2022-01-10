@@ -1,23 +1,58 @@
 [
   {
     "full_name": "Mike Wazowski",
-    "phone_number": "555-555-5555",
-    "email": "m@gmail.com",
-    "tags": "monster,american",
+    "phone_number": "123-456-9055",
+    "email": "mikeyw@monsterinc.com",
+    "tags": "Monster",
+    "id": 1
+  },
+  {
+    "full_name": "Buzz Lightyear",
+    "phone_number": "123-456-1111",
+    "email": "buzz@pixar.com",
+    "tags": "Toy",
+    "id": 2
+  },
+  {
+    "full_name": "Luke Skywalker",
+    "phone_number": "706-653-3452",
+    "email": "theforce@gmail.com",
+    "tags": "Jedi",
+    "id": 3
+  },
+  {
+    "full_name": "Moana",
+    "phone_number": "333-345-3333",
+    "email": "lovesthesea@netscape.org",
+    "tags": "Seafarer",
     "id": 4
   },
   {
-    "full_name": "Liz Nunley",
-    "phone_number": "804-513-6279",
-    "email": "elizabeth.m.nunley@gmail.com",
-    "tags": "american",
+    "full_name": "Rey",
+    "phone_number": "456-654-1234",
+    "email": "forceawakes@sw.com",
+    "tags": "Jedi",
+    "id": 5
+  },
+  {
+    "full_name": "Frodo Baggins",
+    "phone_number": "777-435-1234",
+    "email": "theshirerules@hotmail.com",
+    "tags": "Hobbit",
     "id": 6
   },
   {
-    "full_name": "Fred Van Vleet",
-    "phone_number": "123-456-7890",
-    "email": "freddy3s@gmail.com",
-    "tags": "american,athelete,undrafted",
+    "full_name": "Yoda",
+    "phone_number": "123-456-1111",
+    "email": "yman@sw.ca",
+    "tags": "Miniature,Green",
     "id": 7
+  },
+  {
+    "full_name": "Rapunzel",
+    "phone_number": "111-222-3333",
+    "email": "longlocks@fairytale.com",
+    "tags": "German",
+    "id": 8
   }
 ]

@@ -22,7 +22,7 @@ class View {
     this.contactsList = this.createContactsList();
     this.editContactForm = this.createEditContactForm();
     this.addContactForm = this.createAddContactForm();
-    this.addTagForm = this.createAddTagForm();
+    this.addTagFormContainer = this.createAddTagForm();
 
     // non-container elements
     this.title = this.createTitle('h1', 'Contact Manager');
@@ -33,6 +33,22 @@ class View {
     this.addContactButton = this.createAddContactButton();
     this.noContactsMessage = this.createNoContactsMessage();
     this.filterTagsPlaceholder = this.createFilterTagsPlaceholder();
+    this.cancelEditContactButton = this.editContactForm.querySelector('#cancel-contacts-btn');
+    this.cancelAddContactButton = this.addContactForm.querySelector('#cancel-contacts-btn');
+    this.addTagForm = this.addTagFormContainer.querySelector('form');
+  }
+
+  createControlBar() {
+    return this.createElement({tag: 'div', id: 'control-bar'});
+  }
+
+  createAddContactButton(text) {
+    return this.createElement({
+      tag: 'a',
+      classes: ['btn'],
+      textContent: 'Add Contact',
+      attributes: {'href': '#'}
+    });
   }
 
   createSearchInput() {
@@ -46,21 +62,8 @@ class View {
     return this.createElement({tag: 'select', attributes: {'name': 'tags'}});
   }
 
-  createControlBar() {
-    return this.createElement({tag: 'div', id: 'control-bar'});
-  }
-
   createFormsContainer() {
     return this.createElement({tag: 'div', id: 'forms-container'});
-  }
-
-  createAddContactButton(text) {
-    return this.createElement({
-      tag: 'a',
-      classes: ['btn'],
-      textContent: 'Add Contact',
-      attributes: {'href': '#'}
-    });
   }
 
   createContactsList() {
@@ -89,6 +92,7 @@ class View {
 
   displayHomeElements() {
     this.clearElementChildren(this.main);
+    this.clearSearchInput();
     this.controlBar.append(this.addContactButton, this.searchInput, this.tagDropdown);
     this.main.append(this.controlBar,this.contactsList);
   }
@@ -103,7 +107,7 @@ class View {
     }
   }
 
-  displayTags(tags) {
+  displayResetTags(tags) {
     this.clearElementChildren(this.tagDropdown);
     this.tagDropdown.appendChild(this.filterTagsPlaceholder);
     let option;
@@ -128,22 +132,23 @@ class View {
 
   displayAddContactForm(tags) {
     this.clearValidationErrors();
+    this.clearAddContactForm();
     this.clearElementChildren(this.main);
     this.clearElementChildren(this.formsContainer);
+
     this.populateContactFormTags(this.addContactForm, tags);
     this.formsContainer.append(this.addContactForm);
     this.main.append(this.addFormHeading);
     this.main.append(this.formsContainer);
   }
 
-  displayAddTagForm() {
-    this.formsContainer.append(this.addTagForm);
-  }
+  displayAddTagForm() { this.formsContainer.append(this.addTagFormContainer) };
 
   displayNewTagOption(tag) {
-    this.view.clearAddTagForm();
+    this.clearAddTagForm();
     let option = this.createOptionElement(tag, tag);
-    document.querySelector('#tags').append(option);
+    document.querySelector('#tags')
+      .insertBefore(option, document.querySelector('#tags').firstChild);
   }
 
   displayValidationErrors(errors) {
@@ -167,6 +172,10 @@ class View {
     }
   }
 
+  clearSearchInput() {
+    this.searchInput.value = '';
+  }
+
   clearValidationErrors() {
     let errorMessages = this.formsContainer.querySelectorAll('.error-message');
     if (errorMessages) errorMessages.forEach(e => e.remove());
@@ -185,7 +194,7 @@ class View {
     let input;
     Object.keys(contact).forEach(k => {
       input = form.querySelector('#' + k);
-      if (input) input.setAttribute('value', contact[k]);
+      if (input) input.value = contact[k];
     })
     form.id = contact['id'];
   }
@@ -256,7 +265,7 @@ class View {
   }
 
   bindCancelEditContact(handler) {
-    this.editContactForm.querySelector('#cancel-add-contacts-btn').addEventListener('click', event => {
+    this.cancelEditContactButton.addEventListener('click', event => {
       event.preventDefault();
       handler();
     })
@@ -270,7 +279,7 @@ class View {
   }
 
   bindCancelAddContact(handler) {
-    this.addContactForm.querySelector('#cancel-add-contacts-btn').addEventListener('click', event => {
+    this.cancelEditContactButton.addEventListener('click', event => {
       event.preventDefault();
       handler();
     })
@@ -285,9 +294,9 @@ class View {
   }
 
   bindSubmitAddTag(handler) {
-    this.addTagForm.querySelector('form').addEventListener('submit', event => {
+    this.addTagForm.addEventListener('submit', event => {
       event.preventDefault();
-      let tag = Object.values(this.prepareFormData(this.addTagForm.querySelector('form')))[0];
+      let tag = Object.values(this.prepareFormData(this.addTagForm))[0];
       handler(tag)
     })
   }

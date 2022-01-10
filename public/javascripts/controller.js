@@ -8,7 +8,6 @@ class Controller {
 
     this.searchTerm = '';
     this.tagFilter = '';
-    this.filteredContacts = this.filterContacts();
 
     this.displayFilteredContactsAndTags();
     this.bindEvents();
@@ -24,6 +23,11 @@ class Controller {
         return contact.matchesSearch(this.searchTerm);
       })
     )
+  }
+
+  resetFilters() {
+    this.searchTerm = '';
+    this.tagFilter = '';
   }
 
   modelContactsToEntityContacts(contacts) {
@@ -53,14 +57,9 @@ class Controller {
   displayFilteredContactsAndTags = async () => {
     await this.getAndMapContacts();
     this.model.addTags(this.contacts.getAllUniqueContactsTags());
-    this.filteredContacts = this.filterContacts();
-    this.view.displayTags(this.filteredContacts.getAllUniqueContactsTags());
-    this.view.displayContacts(this.filteredContacts);
-  }
-
-  displayCachedFilteredContactsAndTags() {
-    this.view.displayTags(this.filteredContacts.getAllUniqueContactsTags());
-    this.view.displayContacts(this.filteredContacts);
+    let filteredContacts = this.filterContacts();
+    this.view.displayResetTags(this.contacts.getAllUniqueContactsTags());
+    this.view.displayContacts(filteredContacts);
   }
 
   bindEvents() {
@@ -79,12 +78,14 @@ class Controller {
 
   handleSearchContacts = (searchText) => {
     this.searchTerm = searchText;
-    this.view.displayContacts(this.filterContacts());
+    this.filteredContacts = this.filterContacts();
+    this.view.displayContacts(this.filteredContacts);
   }
 
   handleFilterByTag = (tag) => {
     this.tagFilter = tag;
-    this.view.displayContacts(this.filterContacts());
+    this.filteredContacts = this.filterContacts();
+    this.view.displayContacts(this.filteredContacts);
   }
 
   handleDeleteContact = (id) => {
@@ -94,6 +95,7 @@ class Controller {
   }
 
   handleEditContact = (id) => {
+    this.resetFilters();
     let contact = this.contacts.getContact(id);
     this.view.displayEditContactForm(contact, this.model.tags);
     this.view.displayAddTagForm();
@@ -104,6 +106,7 @@ class Controller {
     if (contact.isValid()) {
       this.model.editContact(this.entityContactToModelContact(contact));
       this.view.displayHomeElements();
+      this.displayFilteredContactsAndTags();
     } else {
       this.view.displayValidationErrors(contact.validationErrors());
     }
@@ -111,17 +114,13 @@ class Controller {
 
   handleCancelEditContact = () => {
     this.view.displayHomeElements();
-    this.displayCachedFilteredContactsAndTags();
+    this.displayFilteredContactsAndTags();
   }
 
   handleAddContact = () => {
+    this.resetFilters();
     this.view.displayAddContactForm(this.model.tags);
     this.view.displayAddTagForm();
-  }
-
-  handleCancelAddContact = () => {
-    this.view.displayHomeElements();
-    this.displayCachedFilteredContactsAndTags();
   }
 
   handleSubmitAddContact = (contactJSON) => {
@@ -129,9 +128,16 @@ class Controller {
     if (contact.isValid()) {
       this.model.addContact(this.entityContactToModelContact(contact));
       this.view.displayHomeElements();
+      this.displayFilteredContactsAndTags();
     } else {
       this.view.displayValidationErrors(contact.validationErrors());
     }
+  }
+
+  handleCancelAddContact = () => {
+    this.view.clearAddContactForm();
+    this.view.displayHomeElements();
+    this.displayFilteredContactsAndTags();
   }
 
   handleSubmitAddTag = (tag) => {
