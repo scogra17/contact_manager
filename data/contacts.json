@@ -1,12 +1,5 @@
 [
   {
-    "full_name": "Sully",
-    "phone_number": "123-123-1234",
-    "email": "bigblue@monstersinc.com",
-    "tags": "Monster,Blue",
-    "id": 4
-  },
-  {
     "full_name": "Mike Wazowski",
     "phone_number": "123-456-1234",
     "email": "mw@monstersinc.com",
