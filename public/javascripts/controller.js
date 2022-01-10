@@ -98,6 +98,7 @@ class Controller {
   handleDeleteContact = (id) => {
     if (confirm('Do you want to delete the contact?')) {
       this.model.deleteContact(id);
+      this.resetFilters();
     }
   };
 
