@@ -84,6 +84,15 @@ class View {
     return this.createElement({tag: 'p', textContent: 'There are no contacts.'});
   }
 
+  createNoContactsWithFilterMessage(searchTerm, tagFilter) {
+    let message = '';
+    let textContent = []
+    if (searchTerm) { textContent.push(`that start with <strong>${searchTerm}</strong>`) };
+    if (tagFilter) { textContent.push(`that have the tag <strong>${tagFilter}</strong>`) };
+    message = `There are no contacts that ${textContent.join(' and ')}.`
+    return this.createElement({tag: 'p', innerHTML: message});
+  }
+
   createFilterTagsPlaceholder() {
     return this.createElement({tag: 'option', textContent: 'Filter by tag', attributes: {'value': '', 'selected': null}});
   }
@@ -97,10 +106,12 @@ class View {
     this.main.append(this.controlBar,this.contactsList);
   }
 
-  displayContacts(contacts) {
+  displayContacts(contacts, noContacts = false, filters = {}) {
     this.clearElementChildren(this.contactsList);
-    if (contacts.isEmpty()) {
+    if (contacts.isEmpty() && noContacts) {
       this.contactsList.append(this.noContactsMessage);
+    } else if (contacts.isEmpty()) {
+      this.contactsList.append(this.createNoContactsWithFilterMessage(filters.searchTerm, filters.tagFilter))
     } else {
       let template = contacts.contacts.map(contact => this.contactTemplate(contact));
       this.contactsList.innerHTML = template.join("");
@@ -279,7 +290,7 @@ class View {
   }
 
   bindCancelAddContact(handler) {
-    this.cancelEditContactButton.addEventListener('click', event => {
+    this.cancelAddContactButton.addEventListener('click', event => {
       event.preventDefault();
       handler();
     })
@@ -340,6 +351,7 @@ class View {
     if (elem.id) element.id = elem.id;
     if (elem.attributes) Object.keys(elem.attributes).forEach(a => element.setAttribute(a, elem.attributes[a]))
     if (elem.textContent) element.textContent = elem.textContent;
+    if (elem.innerHTML) element.innerHTML = elem.innerHTML;
     return element
   }
 }

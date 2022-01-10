@@ -59,7 +59,7 @@ class Controller {
     this.model.addTags(this.contacts.getAllUniqueContactsTags());
     let filteredContacts = this.filterContacts();
     this.view.displayResetTags(this.contacts.getAllUniqueContactsTags());
-    this.view.displayContacts(filteredContacts);
+    this.view.displayContacts(filteredContacts, this.contacts.isEmpty(), {searchTerm: this.searchTerm, tagFilter: this.tagFilter});
   }
 
   bindEvents() {
@@ -78,14 +78,12 @@ class Controller {
 
   handleSearchContacts = (searchText) => {
     this.searchTerm = searchText;
-    this.filteredContacts = this.filterContacts();
-    this.view.displayContacts(this.filteredContacts);
+    this.view.displayContacts(this.filterContacts(), this.contacts.isEmpty(), {searchTerm: this.searchTerm, tagFilter: this.tagFilter});
   }
 
   handleFilterByTag = (tag) => {
     this.tagFilter = tag;
-    this.filteredContacts = this.filterContacts();
-    this.view.displayContacts(this.filteredContacts);
+    this.view.displayContacts(this.filterContacts(), this.contacts.isEmpty(), {searchTerm: this.searchTerm, tagFilter: this.tagFilter});
   }
 
   handleDeleteContact = (id) => {
@@ -105,6 +103,7 @@ class Controller {
     let contact = new Contact(contactJSON);
     if (contact.isValid()) {
       this.model.editContact(this.entityContactToModelContact(contact));
+      this.view.clearAddTagForm();
       this.view.displayHomeElements();
       this.displayFilteredContactsAndTags();
     } else {
@@ -113,6 +112,7 @@ class Controller {
   }
 
   handleCancelEditContact = () => {
+    this.view.clearAddTagForm();
     this.view.displayHomeElements();
     this.displayFilteredContactsAndTags();
   }
@@ -127,6 +127,7 @@ class Controller {
     let contact = new Contact(contactJSON);
     if (contact.isValid()) {
       this.model.addContact(this.entityContactToModelContact(contact));
+      this.view.clearAddTagForm();
       this.view.displayHomeElements();
       this.displayFilteredContactsAndTags();
     } else {
@@ -136,6 +137,7 @@ class Controller {
 
   handleCancelAddContact = () => {
     this.view.clearAddContactForm();
+    this.view.clearAddTagForm();
     this.view.displayHomeElements();
     this.displayFilteredContactsAndTags();
   }
