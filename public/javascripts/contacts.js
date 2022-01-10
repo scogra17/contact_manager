@@ -1,5 +1,3 @@
-"use strict";
-
 class Contacts {
   constructor(contacts) {
     this.contacts = contacts || [];
@@ -10,15 +8,15 @@ class Contacts {
   }
 
   getContact(id) {
-    let contact = this.contacts.filter(contact => contact.id === id);
+    const contact = this.contacts.filter((c) => c.id === id);
     if (contact) return contact[0];
   }
 
   getAllUniqueContactsTags() {
-    let tags = {};
-    this.contacts.forEach(contact => {
-      contact.tags.forEach(tag => { if (!tags[tag]) { tags[tag] = true }})
-    })
+    const tags = {};
+    this.contacts.forEach((contact) => {
+      contact.tags.forEach((tag) => { if (!tags[tag]) { tags[tag] = true; } });
+    });
     return tags;
   }
 }

@@ -1,7 +1,5 @@
-"use strict";
-
-const EMAIL_REGEXP = new RegExp('[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}', 'i'),
-      PHONE_REGEXP = new RegExp('[0-9]{3}-[0-9]{3}-[0-9]{4}');
+const EMAIL_REGEXP = /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}/i;
+const PHONE_REGEXP = /[0-9]{3}-[0-9]{3}-[0-9]{4}/;
 
 class Contact {
   constructor(contact) {
@@ -28,30 +26,28 @@ class Contact {
 
   validationErrors() {
     return {
-      'fullName': this.fullNameValidationError(),
-      'email': this.emailValidationError(),
-      'phoneNumber': this.phoneNumberValidationError(),
-    }
+      fullName: this.fullNameValidationError(),
+      email: this.emailValidationError(),
+      phoneNumber: this.phoneNumberValidationError(),
+    };
   }
 
   fullNameValidationError() {
     if (!this.fullName) {
-      return 'Must be greater than 0 characters'
+      return 'Must be greater than 0 characters';
     }
   }
 
   emailValidationError() {
-    if (!this.email) {
-      return 'Must be greater than 0 characters';
-    } else if (!EMAIL_REGEXP.test(this.email)) {
+    if (!this.email) { return 'Must be greater than 0 characters'; }
+    if (!this.email.match(EMAIL_REGEXP)) {
       return 'Must be in the form username@server.domain';
     }
   }
 
   phoneNumberValidationError() {
-    if (!this.phoneNumber) {
-      return 'Must be greater than 0 characters';
-    } else if (!PHONE_REGEXP.test(this.phoneNumber)) {
+    if (!this.phoneNumber) { return 'Must be greater than 0 characters'; }
+    if (!this.phoneNumber.match(PHONE_REGEXP)) {
       return 'Must be in the form ###-###-####';
     }
   }

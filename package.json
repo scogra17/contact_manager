@@ -5,7 +5,8 @@
   "scripts": {
     "server": "node contacts.js",
     "start": "cross-env NODE_ENV=dev npm run server ",
-    "test": "mocha --timeout 10000"
+    "test": "mocha --timeout 10000",
+    "lint": "./node_modules/.bin/eslint"
   },
   "private": true,
   "dependencies": {
@@ -20,6 +21,9 @@
     "chai-http": "^2.0.1",
     "concurrently": "2.2.0",
     "cross-env": "^5.1.1",
+    "eslint": "^8.6.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.25.4",
     "mocha": "^2.4.5"
   }
 }

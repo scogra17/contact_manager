@@ -1,4 +1,3 @@
-"use strict";
 const DOMAIN = 'http://localhost:3000';
 
 class Model {
@@ -8,53 +7,54 @@ class Model {
   }
 
   async getContacts() {
-    let response = await fetch(
-      DOMAIN + '/api/contacts', {
-        method: 'GET',
-        headers: { 'Response-Type': 'json' }
-      })
-    let contacts = await response.json();
+    const response = await fetch(`${DOMAIN}/api/contacts`, {
+      method: 'GET',
+      headers: { 'Response-Type': 'json' },
+    });
+    const contacts = await response.json();
     return contacts;
   }
 
   async getContact(id) {
-    let response = await fetch(DOMAIN + `/api/contacts/${id}`, {
+    const response = await fetch(`${DOMAIN}/api/contacts/${id}`, {
       method: 'GET',
-      headers: { 'Response-Type': 'json' }})
+      headers: { 'Response-Type': 'json' },
+    });
 
-    let contact = await response.json();
+    const contact = await response.json();
     return contact;
   }
 
   async editContact(contact) {
-    let response = await fetch(DOMAIN + `/api/contacts/${contact.id}`, {
+    const response = await fetch(`${DOMAIN}/api/contacts/${contact.id}`, {
       method: 'PUT',
       headers: {
         'Content-type': 'application/json',
-        'Response-Type': 'json'
+        'Response-Type': 'json',
       },
       body: JSON.stringify(contact),
-    })
+    });
     await response.json();
     this.onContactsListChanged();
   }
 
   async addContact(contact) {
-    let response = await fetch(DOMAIN + '/api/contacts', {
+    const response = await fetch(`${DOMAIN}/api/contacts`, {
       method: 'POST',
       headers: {
         'Content-type': 'application/json',
-        'Response-Type': 'json'
+        'Response-Type': 'json',
       },
       body: JSON.stringify(contact),
-    })
-    await response.json()
+    });
+    await response.json();
     this.onContactsListChanged();
   }
 
   async deleteContact(id) {
-    await fetch(DOMAIN + `/api/contacts/${id}`, {
-      method: 'DELETE'})
+    await fetch(`${DOMAIN}/api/contacts/${id}`, {
+      method: 'DELETE',
+    });
     this.onContactsListChanged();
   }
 
@@ -62,7 +62,7 @@ class Model {
     this.onContactsListChanged = handler;
   }
 
-  addTag(tag) { if (!this.tags[tag]) { this.tags[tag] = true } };
+  addTag(tag) { if (!this.tags[tag]) { this.tags[tag] = true; } }
 
   addTags(tags) {
     Object.assign(this.tags, tags);

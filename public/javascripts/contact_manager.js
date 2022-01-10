@@ -1,5 +1,3 @@
-"use strict";
-
 class ContactManager {
   constructor() {
     this.contacts = new Contacts();
